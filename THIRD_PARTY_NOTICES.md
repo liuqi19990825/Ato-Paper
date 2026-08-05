@@ -36,3 +36,7 @@ Bundled file:
 - `assets/vendor/highlight.min.js`
 
 Ato Paper uses the upstream browser build for syntax parsing and automatic language detection. The paper-style toolbar, token palette, copy interaction and PJAX initialization are original theme code.
+
+## CommentNotifier compatibility
+
+The optional files under `integrations/CommentNotifier/` are original Ato Paper email templates designed for the public template-placeholder interface of [jrotty/CommentNotifier](https://github.com/jrotty/CommentNotifier). The CommentNotifier plugin itself is not bundled with this theme and remains licensed and distributed by its author under GPL-3.0.

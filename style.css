@@ -522,6 +522,8 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .comment-contact-field.is-qq small { color: var(--accent); }
 .comment-contact-field.is-email input { border-color: color-mix(in srgb, var(--green) 66%, var(--line)); }
 .comment-contact-field.is-email small { color: var(--green); }
+.comment-mail-notice { display: flex; align-items: flex-start; gap: 9px; margin: 14px 0 2px; padding: 11px 13px; border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line)); background: color-mix(in srgb, var(--accent) 5%, var(--paper)); color: color-mix(in srgb, var(--muted) 78%, var(--ink)); font: 500 12px/1.65 var(--sans); }
+.comment-mail-notice > span:first-child { flex: 0 0 auto; color: var(--accent); font-size: 14px; line-height: 1.4; }
 .comment-card .avatar-qq { background: var(--paper-deep); object-fit: cover; }
 
 /* Friends page */

@@ -224,7 +224,7 @@
     var rememberedQQ = rememberedMail.match(/^([1-9][0-9]{4,11})@qq\.com$/i);
     var field = contactInput.closest('label');
     var hint = field ? field.querySelector('[data-comment-contact-hint]') : null;
-    var defaultHint = '填写 QQ 将显示 QQ 头像，填写 Email 将使用邮箱头像。';
+    var defaultHint = 'QQ 用于头像与对应 QQ 邮箱通知；Email 用于头像与回复通知。';
     if (rememberedMail) contactInput.value = rememberedQQ ? rememberedQQ[1] : rememberedMail;
 
     function setContactKind(kind) {
@@ -233,8 +233,8 @@
         field.classList.toggle('is-email', kind === 'email');
       }
       if (!hint) return;
-      if (kind === 'qq') hint.textContent = '已识别为 QQ，将显示 QQ 头像。';
-      else if (kind === 'email') hint.textContent = '已识别为 Email，将使用所选邮箱头像源。';
+      if (kind === 'qq') hint.textContent = '已识别为 QQ，回复将通知对应的 QQ 邮箱。';
+      else if (kind === 'email') hint.textContent = '已识别为 Email，回复将通知这个邮箱。';
       else hint.textContent = defaultHint;
     }
 

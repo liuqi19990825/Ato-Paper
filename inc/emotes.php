@@ -185,3 +185,54 @@ function ato_render_comment_emotes($content, $options)
 
     return implode('', $parts);
 }
+
+/**
+ * CommentNotifier 的邮件表情回调。
+ *
+ * 在插件“表情重载”中填写 ato_comment_notifier_emotes。邮件客户端对动画
+ * 与外部样式支持有限，因此 Bilibili 长图只展示第一帧。
+ */
+function ato_comment_notifier_emotes($content)
+{
+    $options = \Widget\Options::alloc();
+    $replacements = [];
+
+    foreach (ato_tieba_emotes() as $name => $emote) {
+        $url = htmlspecialchars(ato_emote_asset_url($options, 'tieba', $emote['file']), ENT_QUOTES, 'UTF-8');
+        $label = htmlspecialchars($emote['label'], ENT_QUOTES, 'UTF-8');
+        $replacements[':' . $name . ':'] = '<img src="' . $url
+            . '" width="30" height="30" style="display:inline-block;width:30px;height:30px;margin:0 2px;vertical-align:middle;border:0;" alt="[贴吧：' . $label . ']">';
+    }
+
+    foreach (ato_bilibili_emotes() as $name => $emote) {
+        $url = htmlspecialchars(ato_emote_asset_url($options, 'bilibili', $name . '.png'), ENT_QUOTES, 'UTF-8');
+        $label = htmlspecialchars($emote['label'], ENT_QUOTES, 'UTF-8');
+        $height = max(32, (int) $emote['height']);
+        $mailHeight = max(30, (int) round($height * 30 / 32));
+
+        if ($height === 32) {
+            $markup = '<img src="' . $url
+                . '" width="30" height="30" style="display:inline-block;width:30px;height:30px;margin:0 2px;vertical-align:middle;border:0;" alt="[Bilibili：' . $label . ']">';
+        } else {
+            $markup = '<span style="display:inline-block;width:30px;height:30px;margin:0 2px;overflow:hidden;vertical-align:middle;">'
+                . '<img src="' . $url . '" width="30" height="' . $mailHeight
+                . '" style="display:block;width:30px;height:' . $mailHeight . 'px;margin:0;border:0;" alt="[Bilibili：' . $label . ']">'
+                . '</span>';
+        }
+
+        $replacements['{{' . $name . '}}'] = $markup;
+    }
+
+    $parts = preg_split('/(<[^>]+>)/u', (string) $content, -1, PREG_SPLIT_DELIM_CAPTURE);
+    if ($parts === false) {
+        return (string) $content;
+    }
+
+    foreach ($parts as $index => $part) {
+        if ($part !== '' && $part[0] !== '<') {
+            $parts[$index] = strtr($part, $replacements);
+        }
+    }
+
+    return implode('', $parts);
+}

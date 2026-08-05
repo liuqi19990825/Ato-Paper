@@ -1,6 +1,6 @@
 # Ato Paper
 
-一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.5.4。
+一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.5.5。
 
 ## 当前功能
 
@@ -25,6 +25,8 @@
 - 独立友链页面使用书签式纸卡，可在后台逐行维护站点信息
 - 关于、时间轴与友链三个独立页面使用一致的阅读宽度
 - 评论联系方式使用单一输入框自动识别 QQ 或 Email，并为 QQ 评论显示 QQ 头像
+- 评论表单明确说明回复通知去向，QQ 号会使用对应的 QQ 邮箱接收通知
+- 附带 CommentNotifier 专用纸张风访客回复、站长新评论与待审核邮件模板
 - CSS 与 JavaScript 自动附带主题版本号，更新主题后不会继续误用浏览器中的旧资源
 - Email 评论头像默认使用 Cravatar 国内源，并可切换到 Gravatar 或自定义兼容头像源
 - 文章代码块支持本地语法高亮、自动语言识别与一键复制
@@ -111,6 +113,24 @@ location / {
 Email 提交具有无 JavaScript 兜底，即使脚本未加载也会直接使用 Typecho 原生邮箱字段；QQ 自动识别与转换需要主题脚本。主题脚本地址会携带当前版本号，因此覆盖升级主题后浏览器会自动请求新版脚本，不需要等待旧缓存过期。
 
 QQ 号不会显示在页面上，但会以对应 QQ 邮箱形式保存在评论数据中；头像加载会向腾讯的头像服务发起请求。如果不希望接受 QQ，也可以在主题设置中切换为“仅使用 Email”。
+
+## CommentNotifier 回复邮件
+
+主题在 `integrations/CommentNotifier/AtoPaper/` 中附带三份 CommentNotifier 邮件模板：
+
+- `guest.html`：访客的评论收到回复时发送
+- `owner.html`：文章收到新评论时通知文章作者或站长
+- `notice.html`：待审核评论通知站长
+
+安装方法：
+
+1. 从 [jrotty/CommentNotifier](https://github.com/jrotty/CommentNotifier) 获取插件，将插件目录命名为 `CommentNotifier` 并上传到 `/usr/plugins/`。
+2. 在 Typecho 后台启用 CommentNotifier，先配置并测试 SMTP 或其他发信方式。
+3. 将主题中的 `integrations/CommentNotifier/AtoPaper` 整个文件夹复制到 `/usr/plugins/CommentNotifier/template/AtoPaper`。
+4. 进入“控制台 → 评论邮件模板”，启用 `Ato Paper`。
+5. 回到 CommentNotifier 设置，将“表情重载”填写为 `ato_comment_notifier_emotes`，这样邮件中也能显示主题表情。
+
+建议先保持“异步提交”关闭并完成一封测试邮件，再按需要开启异步发送。SMTP 密码或授权码只保存在插件设置中，不要写进模板文件。插件本体、更新与发信行为仍由 CommentNotifier 负责；Ato Paper 只提供评论字段、提示文案、表情回调和邮件外观。
 
 ### 头像源与默认头像
 

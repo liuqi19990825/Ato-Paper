@@ -34,13 +34,17 @@ $commentContactMode = ato_option($this->options, 'commentContactMode', 'qq');
                         <?php if ($commentContactMode === 'qq'): ?>
                             <label class="comment-contact-field">联系方式
                                 <input name="mail" type="text" value="<?php $this->remember('mail'); ?>" maxlength="150" autocomplete="email" placeholder="QQ 号或 Email" data-comment-contact<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>>
-                                <small data-comment-contact-hint>填写 QQ 将显示 QQ 头像，填写 Email 将使用邮箱头像。</small>
+                                <small data-comment-contact-hint>QQ 用于头像与对应 QQ 邮箱通知；Email 用于头像与回复通知。</small>
                             </label>
                         <?php else: ?>
                             <label>Email<input name="mail" type="email" value="<?php $this->remember('mail'); ?>" autocomplete="email"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>></label>
                         <?php endif; ?>
                         <label>网站<input name="url" type="url" value="<?php $this->remember('url'); ?>" autocomplete="url" placeholder="https://"></label>
                     </div>
+                    <p class="comment-mail-notice">
+                        <span aria-hidden="true">✉</span>
+                        <span><?php if ($commentContactMode === 'qq'): ?>回复通知会发送到你预留的邮箱；填写 QQ 号时，将发送到对应的 QQ 邮箱。<?php else: ?>回复通知会发送到你预留的邮箱，邮箱地址不会公开显示。<?php endif; ?></span>
+                    </p>
                 <?php endif; ?>
 
                 <label class="comment-textarea-label" for="textarea">留言内容</label>
