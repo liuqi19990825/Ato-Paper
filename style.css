@@ -265,10 +265,10 @@ img { display: block; max-width: 100%; height: auto; }
 .site-footer { border-top: 1px solid var(--line); }
 .footer-main { min-height: 154px; display: flex; align-items: center; justify-content: space-between; gap: 35px; }
 .footer-main > p { margin: 0; font-size: 18px; }
-.footer-main > div { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; color: var(--muted); font: 500 9px/1 var(--sans); }
+.footer-main > div { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; color: var(--muted); font: 500 11px/1.55 var(--sans); }
 .filing-strip { border-top: 1px solid color-mix(in srgb, var(--line) 72%, transparent); background: color-mix(in srgb, var(--paper-deep) 34%, transparent); }
-.filing-inner { min-height: 50px; display: flex; align-items: center; justify-content: space-between; gap: 24px; color: color-mix(in srgb, var(--muted) 76%, transparent); font: 500 9px/1.4 var(--sans); letter-spacing: .02em; }
-.filing-label { opacity: .78; }
+.filing-inner { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--muted); font: 500 11px/1.5 var(--sans); letter-spacing: .015em; }
+.filing-label { opacity: .92; }
 .filing-links { display: flex; align-items: center; gap: 20px; }
 .filing-links a { display: inline-flex; align-items: center; gap: 7px; transition: color .2s ease; }
 .filing-links a + a::before { content: "·"; margin-right: 13px; color: var(--line); }
@@ -306,7 +306,7 @@ img { display: block; max-width: 100%; height: auto; }
   .post-entry h2 { font-size: 21px; }
   .footer-main { min-height: 142px; align-items: flex-start; justify-content: center; flex-direction: column; }
   .footer-main > div { align-items: flex-start; }
-  .filing-inner { min-height: 74px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 9px; padding-block: 14px; }
+  .filing-inner { min-height: 82px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 9px; padding-block: 16px; }
   .filing-links { flex-wrap: wrap; gap: 8px 14px; }
   .filing-links a + a::before { margin-right: 6px; }
   .reading-page, .archive-page, .now-page { width: min(100% - 32px, 680px); padding-top: 32px; }
