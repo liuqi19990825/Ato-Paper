@@ -1,6 +1,9 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+$atoPjaxEnabled = ato_option($this->options, 'enablePjax', '1') !== '0';
+?>
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-ato-pjax="<?php echo $atoPjaxEnabled ? 'true' : 'false'; ?>">
 <head>
     <meta charset="<?php $this->options->charset(); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -70,6 +73,11 @@ while ($navPages->next()) {
             </div>
         </div>
     </header>
+
+    <?php if ($atoPjaxEnabled): ?>
+        <div class="pjax-progress" id="pjax-progress" aria-hidden="true"></div>
+        <div class="sr-only" id="pjax-announcer" aria-live="polite" aria-atomic="true"></div>
+    <?php endif; ?>
 
     <div class="search-panel" id="search-panel" aria-hidden="true">
         <button class="search-backdrop" type="button" data-search-close aria-label="关闭搜索"></button>

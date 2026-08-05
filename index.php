@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.1.8
+ * @version 0.2.0
  * @link https://atowo.work/
  */
 
@@ -21,7 +21,7 @@ $latestMoment = $moments[0] ?? [
 $entryIndex = 0;
 ?>
 
-<main class="blog-main wrap">
+<main class="blog-main wrap" data-ato-pjax-main>
     <section class="hello" aria-labelledby="hello-title">
         <div class="hello-copy">
             <span class="little-mark">你好呀 👋</span>

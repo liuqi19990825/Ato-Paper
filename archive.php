@@ -1,7 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('header.php'); ?>
 
-<main class="archive-page wrap">
+<main class="archive-page wrap" data-ato-pjax-main>
     <a href="<?php $this->options->siteUrl(); ?>" class="back-link">← 回到首页</a>
     <header class="archive-header">
         <span class="little-mark">ARCHIVE · 慢慢翻阅</span>

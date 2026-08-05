@@ -17,6 +17,11 @@
     <?php if ($this->allow('comment')): ?>
         <div id="<?php $this->respondId(); ?>" class="respond-paper">
             <div class="cancel-comment-reply"><?php $comments->cancelReply('取消回复'); ?></div>
+            <?php if ($this->options->commentsAntiSpam): ?>
+                <script data-ato-comment-security>
+                    window.atoPaperCommentToken = <?php echo \Typecho\Common::shuffleScriptVar($this->security->getToken($this->request->getRequestUrl())); ?>;
+                </script>
+            <?php endif; ?>
             <form method="post" action="<?php $this->commentUrl(); ?>" id="comment-form" role="form">
                 <?php if ($this->user->hasLogin()): ?>
                     <p class="logged-in-note">以 <a href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a> 的身份留言 · <a href="<?php $this->options->logoutUrl(); ?>">退出</a></p>

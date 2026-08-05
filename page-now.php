@@ -10,7 +10,7 @@ $lastUpdated = $moments[0]['date'] ?? date('Y-m-d');
 $this->need('header.php');
 ?>
 
-<main class="now-page wrap">
+<main class="now-page wrap" data-ato-pjax-main>
     <a href="<?php $this->options->siteUrl(); ?>" class="back-link">← 回到首页</a>
 
     <header class="now-page-header">
@@ -44,4 +44,3 @@ $this->need('header.php');
 </main>
 
 <?php $this->need('footer.php'); ?>
-

@@ -115,6 +115,18 @@ function themeConfig($form)
     );
     $form->addInput($policeUrl);
 
+    $enablePjax = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'enablePjax',
+        [
+            '1' => _t('开启'),
+            '0' => _t('关闭')
+        ],
+        '1',
+        _t('PJAX 无刷新加载'),
+        _t('在站内页面之间切换时保留页头与深色模式，并使用轻量纸张过渡。遇到不兼容的插件时可以在这里关闭。')
+    );
+    $form->addInput($enablePjax);
+
     $footerCredit = new \Typecho\Widget\Helper\Form\Element\Text(
         'footerCredit',
         null,
