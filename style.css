@@ -198,32 +198,32 @@ img { display: block; max-width: 100%; height: auto; }
 .comments-area { margin-top: 75px; }
 .comments-heading { display: flex; align-items: baseline; justify-content: space-between; }
 .comments-heading h2 { margin: 0; font-size: 23px; }
-.comments-heading span, .comments-empty, .comments-closed { color: var(--muted); font: 500 10px/1.7 var(--sans); }
+.comments-heading span, .comments-empty, .comments-closed { color: color-mix(in srgb, var(--muted) 78%, var(--ink)); font: 500 13px/1.7 var(--sans); }
 .comment-list, .comment-list ol { margin: 30px 0 0; padding: 0; list-style: none; }
 .comment-item + .comment-item { margin-top: 22px; }
 .comment-card { padding: 22px 24px; border: 1px solid var(--line); background: color-mix(in srgb, var(--paper-deep) 52%, transparent); }
 .comment-card header { display: flex; align-items: center; gap: 12px; }
 .comment-card img { width: 42px; height: 42px; border-radius: 50%; filter: saturate(.7); }
 .comment-card header > div { display: flex; flex: 1; flex-direction: column; gap: 5px; }
-.comment-card strong { font-size: 13px; }
-.comment-card time { color: var(--muted); font: 500 9px/1 var(--sans); }
-.comment-reply { color: var(--accent); font: 600 9px/1 var(--sans); }
-.comment-text { margin-top: 15px; font-size: 14px; line-height: 1.85; }
+.comment-card strong { font-size: 14px; }
+.comment-card time { color: color-mix(in srgb, var(--muted) 78%, var(--ink)); font: 500 12px/1.35 var(--sans); }
+.comment-reply { color: var(--accent); font: 600 12px/1.35 var(--sans); }
+.comment-text { margin-top: 15px; font-size: 15px; line-height: 1.85; }
 .comment-text p { margin: 0; }
 .comment-children { margin: 15px 0 0 34px; }
 .comment-by-author > .comment-card { border-left: 2px solid var(--accent); }
-.comment-nav { margin-top: 22px; font: 500 10px/1 var(--sans); }
+.comment-nav { margin-top: 22px; font: 500 12px/1.4 var(--sans); }
 .respond-paper { position: relative; margin-top: 38px; padding: 27px; background: var(--paper-deep); }
 .respond-paper::before { content: ""; position: absolute; left: 48%; top: -8px; width: 62px; height: 16px; background: rgba(203, 177, 128, .4); transform: rotate(2deg); }
-.cancel-comment-reply { margin-bottom: 12px; color: var(--accent); font: 500 10px/1 var(--sans); }
+.cancel-comment-reply { margin-bottom: 12px; color: var(--accent); font: 500 12px/1.4 var(--sans); }
 .comment-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.comment-fields label, .comment-textarea-label { display: flex; flex-direction: column; gap: 8px; color: var(--muted); font: 500 9px/1 var(--sans); }
-.comment-fields input, .respond-paper textarea { width: 100%; padding: 12px; border: 1px solid var(--line); outline: 0; background: var(--paper); color: var(--ink); font: 13px/1.5 var(--sans); }
+.comment-fields label, .comment-textarea-label { display: flex; flex-direction: column; gap: 8px; color: color-mix(in srgb, var(--muted) 78%, var(--ink)); font: 500 12px/1.4 var(--sans); }
+.comment-fields input, .respond-paper textarea { width: 100%; padding: 12px; border: 1px solid var(--line); outline: 0; background: var(--paper); color: var(--ink); font: 15px/1.6 var(--sans); }
 .comment-fields input:focus, .respond-paper textarea:focus { border-color: var(--accent); }
 .comment-textarea-label { margin-top: 16px; }
 .respond-paper textarea { margin-top: 8px; min-height: 125px; resize: vertical; }
-.comment-submit { margin-top: 15px; padding: 11px 17px; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent); color: #fff; cursor: pointer; font: 600 10px/1 var(--sans); }
-.logged-in-note { margin: 0 0 16px; color: var(--muted); font: 500 10px/1.6 var(--sans); }
+.comment-submit { margin-top: 15px; padding: 12px 19px; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent); color: #fff; cursor: pointer; font: 600 12px/1 var(--sans); }
+.logged-in-note { margin: 0 0 16px; color: color-mix(in srgb, var(--muted) 78%, var(--ink)); font: 500 13px/1.7 var(--sans); }
 .logged-in-note a { color: var(--accent); }
 
 /* Now timeline */
