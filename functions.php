@@ -6,6 +6,14 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 require_once __DIR__ . '/inc/emotes.php';
 
 /**
+ * 用于静态资源缓存刷新的主题版本号。
+ */
+function ato_theme_version()
+{
+    return '0.5.4';
+}
+
+/**
  * Ato Paper 主题设置。
  */
 function themeConfig($form)

@@ -206,18 +206,26 @@
     if (!form || form.getAttribute('data-ato-contact-ready') === 'true') return;
 
     var contactInput = form.querySelector('[data-comment-contact]');
+    if (!contactInput) return;
     var mailInput = form.querySelector('[data-comment-mail]');
-    if (!contactInput || !mailInput) return;
+    var rememberedMail = String(mailInput ? mailInput.value : contactInput.value || '').trim();
+    if (!mailInput) {
+      mailInput = document.createElement('input');
+      mailInput.type = 'hidden';
+      mailInput.name = 'mail';
+      mailInput.setAttribute('data-comment-mail', '');
+      contactInput.insertAdjacentElement('afterend', mailInput);
+    }
+    contactInput.name = 'ato_contact';
     form.setAttribute('data-ato-contact-ready', 'true');
 
     var qqPattern = /^[1-9][0-9]{4,11}$/;
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    var rememberedMail = String(mailInput.value || '').trim();
     var rememberedQQ = rememberedMail.match(/^([1-9][0-9]{4,11})@qq\.com$/i);
     var field = contactInput.closest('label');
     var hint = field ? field.querySelector('[data-comment-contact-hint]') : null;
     var defaultHint = '填写 QQ 将显示 QQ 头像，填写 Email 将使用邮箱头像。';
-    if (!contactInput.value && rememberedMail) contactInput.value = rememberedQQ ? rememberedQQ[1] : rememberedMail;
+    if (rememberedMail) contactInput.value = rememberedQQ ? rememberedQQ[1] : rememberedMail;
 
     function setContactKind(kind) {
       if (field) {

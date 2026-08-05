@@ -33,8 +33,7 @@ $commentContactMode = ato_option($this->options, 'commentContactMode', 'qq');
                         <label>称呼<input name="author" type="text" value="<?php $this->remember('author'); ?>" autocomplete="name" required></label>
                         <?php if ($commentContactMode === 'qq'): ?>
                             <label class="comment-contact-field">联系方式
-                                <input name="ato_contact" type="text" maxlength="254" autocomplete="email" placeholder="QQ 号或 Email" data-comment-contact<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>>
-                                <input name="mail" type="hidden" value="<?php $this->remember('mail'); ?>" data-comment-mail>
+                                <input name="mail" type="text" value="<?php $this->remember('mail'); ?>" maxlength="150" autocomplete="email" placeholder="QQ 号或 Email" data-comment-contact<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>>
                                 <small data-comment-contact-hint>填写 QQ 将显示 QQ 头像，填写 Email 将使用邮箱头像。</small>
                             </label>
                         <?php else: ?>

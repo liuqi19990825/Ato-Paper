@@ -26,7 +26,7 @@ $atoPjaxEnabled = ato_option($this->options, 'enablePjax', '1') !== '0';
     <link rel="icon" href="<?php $this->options->themeUrl('assets/icons/favicon.ico'); ?>" sizes="any">
     <link rel="icon" type="image/png" href="<?php $this->options->themeUrl('assets/icons/favicon-32.png'); ?>" sizes="32x32">
     <link rel="apple-touch-icon" href="<?php $this->options->themeUrl('assets/icons/apple-touch-icon.png'); ?>" sizes="180x180">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css?v=' . rawurlencode(ato_theme_version())); ?>">
     <?php $this->header(); ?>
 </head>
 <body>
