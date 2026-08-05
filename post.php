@@ -1,5 +1,8 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $this->need('header.php'); ?>
+<?php
+$disableDropCap = ato_starts_with_punctuation($this->content);
+$this->need('header.php');
+?>
 
 <main class="reading-page wrap">
     <a href="<?php $this->options->siteUrl(); ?>" class="back-link">← 回到首页</a>
@@ -22,7 +25,7 @@
             </figure>
         <?php endif; ?>
 
-        <div class="diary-content" itemprop="articleBody"><?php $this->content(); ?></div>
+        <div class="diary-content<?php echo $disableDropCap ? ' no-drop-cap' : ''; ?>" itemprop="articleBody"><?php $this->content(); ?></div>
 
         <footer class="diary-footer">
             <div class="tags"><span>标签：</span><?php $this->tags('', true, '<span>暂时没有标签</span>'); ?></div>
@@ -39,4 +42,3 @@
 </main>
 
 <?php $this->need('footer.php'); ?>
-

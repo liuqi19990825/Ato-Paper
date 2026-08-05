@@ -1,6 +1,6 @@
 # Ato Paper
 
-一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。
+一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.1.1。
 
 ## 当前功能
 
@@ -47,4 +47,3 @@
 - 面向 Typecho 1.3.0 开发
 - PHP 7.4 或更高版本
 - 推荐使用较新的 Chrome、Edge、Firefox 或 Safari
-

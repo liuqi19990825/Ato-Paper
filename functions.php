@@ -220,6 +220,15 @@ function ato_now_items($raw)
 }
 
 /**
+ * 判断正文是否以中文引号、书名号等标点开头，避免首字下沉同时放大标点和汉字。
+ */
+function ato_starts_with_punctuation($html)
+{
+    $text = trim(html_entity_decode(strip_tags((string) $html), ENT_QUOTES, 'UTF-8'));
+    return $text !== '' && preg_match('/^[《〈“‘「『（【〔［\(\[]/u', $text) === 1;
+}
+
+/**
  * 评论列表单项。
  */
 function threadedComments($comments, $options)

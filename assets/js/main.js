@@ -53,10 +53,16 @@
     });
   }
 
-  document.querySelectorAll('.mobile-menu a').forEach(function (link) {
-    link.addEventListener('click', function () {
-      var menu = link.closest('details');
-      if (menu) menu.open = false;
+  document.querySelectorAll('.mobile-menu').forEach(function (menu) {
+    var summary = menu.querySelector('summary');
+    menu.addEventListener('toggle', function () {
+      if (summary) summary.setAttribute('aria-label', menu.open ? '关闭菜单' : '打开菜单');
+    });
+
+    menu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        menu.open = false;
+      });
     });
   });
 
@@ -77,4 +83,3 @@
     });
   }
 }());
-
