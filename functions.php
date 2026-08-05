@@ -63,6 +63,23 @@ function themeConfig($form)
     );
     $form->addInput($heroCaption);
 
+    $brandIcon = new \Typecho\Widget\Helper\Form\Element\Select(
+        'brandIcon',
+        [
+            'flower' => _t('✿ 珊瑚小花'),
+            'sakura' => _t('❀ 樱花'),
+            'sparkle' => _t('✦ 星芒'),
+            'heart' => _t('♥ 小爱心'),
+            'clover' => _t('☘ 四叶草'),
+            'ribbon' => _t('୨୧ 蝴蝶结'),
+            'music' => _t('♪ 音符')
+        ],
+        'flower',
+        _t('标题旁的小图标'),
+        _t('显示在页头站点标题右侧。')
+    );
+    $form->addInput($brandIcon);
+
     $nowPageUrl = new \Typecho\Widget\Helper\Form\Element\Text(
         'nowPageUrl',
         null,
@@ -203,6 +220,30 @@ function themeFields($layout)
         _t('题图说明')
     );
     $layout->addItem($coverCaption);
+
+    $showToc = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'showToc',
+        [
+            '0' => _t('不显示'),
+            '1' => _t('显示右侧章节目录')
+        ],
+        '0',
+        _t('文章章节目录'),
+        _t('默认关闭。开启后会读取正文中的二级、三级标题，并在宽屏文章右侧生成目录。')
+    );
+    $layout->addItem($showToc);
+
+    $dropCap = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'dropCap',
+        [
+            '0' => _t('不放大'),
+            '1' => _t('放大正文首字')
+        ],
+        '0',
+        _t('正文首字放大'),
+        _t('默认关闭。只对当前文章正文的第一个段落生效。')
+    );
+    $layout->addItem($dropCap);
 }
 
 /**
@@ -220,6 +261,24 @@ function ato_option($options, $name, $default = '')
 function ato_e($value)
 {
     echo htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * 返回页头标题旁的小图标。
+ */
+function ato_brand_icon($name)
+{
+    $icons = [
+        'flower' => '✿',
+        'sakura' => '❀',
+        'sparkle' => '✦',
+        'heart' => '♥',
+        'clover' => '☘',
+        'ribbon' => '୨୧',
+        'music' => '♪',
+    ];
+
+    return $icons[$name] ?? $icons['flower'];
 }
 
 /**

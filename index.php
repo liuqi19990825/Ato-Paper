@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.2.1
+ * @version 0.3.0
  * @link https://atowo.work/
  */
 
@@ -40,9 +40,9 @@ $entryIndex = 0;
         </div>
         <figure class="hello-postcard">
             <?php if ($heroImage !== ''): ?>
-                <img src="<?php ato_e($heroImage); ?>" alt="首页插图">
+                <img src="<?php ato_e($heroImage); ?>" alt="首页插图" decoding="async">
             <?php else: ?>
-                <img src="<?php $this->options->themeUrl('assets/images/hero.png'); ?>" alt="戴着耳机坐在桌前阅读手稿的插画">
+                <img src="<?php $this->options->themeUrl('assets/images/hero.png'); ?>" width="1024" height="1536" alt="戴着耳机坐在桌前阅读手稿的插画" decoding="async" fetchpriority="high">
             <?php endif; ?>
             <figcaption><?php ato_e(ato_option($this->options, 'heroCaption', '想象中的书桌一角 · 2026 夏')); ?></figcaption>
         </figure>

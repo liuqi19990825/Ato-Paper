@@ -42,7 +42,7 @@ while ($navPages->next()) {
     <header class="site-header">
         <div class="wrap header-inner">
             <a class="brand" href="<?php $this->options->siteUrl(); ?>" aria-label="<?php $this->options->title(); ?>首页">
-                <strong><?php $this->options->title(); ?></strong><span>✿</span>
+                <strong><?php $this->options->title(); ?></strong><span class="brand-icon" aria-hidden="true"><?php ato_e(ato_brand_icon(ato_option($this->options, 'brandIcon', 'flower'))); ?></span>
             </a>
 
             <nav class="desktop-nav" aria-label="主导航">

@@ -162,6 +162,8 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 
 /* Reading page */
 .reading-page { width: min(720px, calc(100% - 40px)); padding-block: 45px 110px; }
+.reading-column { min-width: 0; }
+.reading-page.has-toc { position: relative; }
 .back-link { display: inline-block; margin-bottom: 55px; color: var(--muted); font: 500 11px/1 var(--sans); }
 .back-link:hover { color: var(--accent); }
 .diary-header { text-align: left; }
@@ -175,8 +177,10 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .diary-photo figcaption { margin-top: 11px; color: var(--muted); font: 500 9px/1.5 var(--sans); text-align: center; }
 .diary-content { width: 100%; margin: 52px 0 0; overflow-wrap: anywhere; }
 .diary-content > p { margin: 0 0 28px; font-size: 17px; line-height: 2.05; }
+.diary-content.has-drop-cap > p:first-of-type::first-letter { float: left; margin: .12em .13em 0 0; color: var(--accent); font-size: 3.15em; line-height: .78; font-weight: 500; }
 .diary-content h2 { margin: 68px 0 25px; font-size: 27px; line-height: 1.5; font-weight: 600; }
 .diary-content h3 { margin: 45px 0 20px; font-size: 21px; line-height: 1.6; }
+.diary-content h2[id], .diary-content h3[id] { scroll-margin-top: 110px; }
 .diary-content a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
 .diary-content blockquote { position: relative; margin: 55px 15px; padding: 20px 30px; color: var(--accent); font-size: 20px; line-height: 1.85; text-align: center; }
 .diary-content blockquote::before, .diary-content blockquote::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--line); }
@@ -235,6 +239,21 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .comment-submit { margin-top: 15px; padding: 12px 19px; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent); color: #fff; cursor: pointer; font: 600 12px/1 var(--sans); }
 .logged-in-note { margin: 0 0 16px; color: color-mix(in srgb, var(--muted) 78%, var(--ink)); font: 500 13px/1.7 var(--sans); }
 .logged-in-note a { color: var(--accent); }
+
+/* Article table of contents */
+.article-toc { position: absolute; top: 125px; bottom: 110px; left: calc(100% + 42px); width: 200px; }
+.article-toc-inner { position: sticky; top: 108px; max-height: calc(100vh - 145px); padding: 5px 0 5px 18px; overflow-y: auto; border-left: 1px solid var(--line); scrollbar-width: thin; }
+.article-toc-inner > span { color: var(--ink); font: 650 11px/1 var(--sans); letter-spacing: .08em; }
+.article-toc nav { margin-top: 16px; display: flex; align-items: stretch; flex-direction: column; gap: 4px; }
+.article-toc a { position: relative; padding: 6px 0; color: var(--muted); font: 500 12px/1.55 var(--sans); transition: color .18s ease, transform .18s ease; }
+.article-toc a::before { content: ""; position: absolute; left: -22px; top: 14px; width: 6px; height: 6px; border: 2px solid var(--paper); border-radius: 50%; background: var(--line); transition: background-color .18s ease, box-shadow .18s ease; }
+.article-toc a.toc-level-3 { padding-left: 13px; font-size: 11px; }
+.article-toc a:hover, .article-toc a.is-active { color: var(--accent); transform: translateX(2px); }
+.article-toc a.is-active::before { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+
+@media (max-width: 1279px) {
+  .article-toc { display: none; }
+}
 
 /* Now timeline */
 .now-page { width: min(760px, calc(100% - 40px)); padding-block: 45px 115px; }
@@ -333,6 +352,7 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
   .diary-header h1 { font-size: 32px; line-height: 1.45; letter-spacing: -.025em; }
   .diary-photo { margin-block: 42px 48px; }
   .diary-content > p { font-size: 16px; }
+  .diary-content.has-drop-cap > p:first-of-type::first-letter { font-size: 2.8em; }
   .diary-content blockquote { margin-inline: 0; padding-inline: 12px; font-size: 18px; }
   .diary-footer { align-items: flex-start; flex-direction: column; }
   .simple-next { grid-template-columns: 1fr; }

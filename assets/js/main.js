@@ -10,6 +10,7 @@
   var searchInput = document.getElementById('search-input');
   var pjaxProgress = document.getElementById('pjax-progress');
   var pjaxAnnouncer = document.getElementById('pjax-announcer');
+  var tocCleanup = null;
   var pjaxEnabled = root.getAttribute('data-ato-pjax') === 'true'
     && typeof window.fetch === 'function'
     && typeof window.DOMParser === 'function'
@@ -248,11 +249,89 @@
     });
   }
 
+  function initArticleToc(scope) {
+    if (tocCleanup) {
+      tocCleanup();
+      tocCleanup = null;
+    }
+
+    var toc = scope.querySelector('[data-article-toc]');
+    if (!toc) return;
+    var list = toc.querySelector('[data-article-toc-list]');
+    var headings = Array.prototype.slice.call(scope.querySelectorAll('.diary-content h2, .diary-content h3'));
+    if (!list || !headings.length) {
+      toc.hidden = true;
+      scope.classList.remove('has-toc');
+      return;
+    }
+
+    list.textContent = '';
+    var links = [];
+    headings.forEach(function (heading, index) {
+      if (!heading.id) {
+        var base = heading.textContent.trim().toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^\w\u3400-\u9fff-]/g, '')
+          .replace(/^-+|-+$/g, '') || 'section-' + (index + 1);
+        var candidate = base;
+        var suffix = 2;
+        while (document.getElementById(candidate)) {
+          candidate = base + '-' + suffix;
+          suffix += 1;
+        }
+        heading.id = candidate;
+      }
+
+      var link = document.createElement('a');
+      link.href = '#' + encodeURIComponent(heading.id);
+      link.textContent = heading.textContent.trim();
+      link.setAttribute('data-toc-target', heading.id);
+      link.className = heading.tagName === 'H3' ? 'toc-level-3' : 'toc-level-2';
+      list.appendChild(link);
+      links.push(link);
+    });
+
+    function setActive(id) {
+      links.forEach(function (link) {
+        var active = link.getAttribute('data-toc-target') === id;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }
+
+    var scheduled = false;
+    function update() {
+      scheduled = false;
+      var current = headings[0];
+      headings.forEach(function (heading) {
+        if (heading.getBoundingClientRect().top <= 150) current = heading;
+      });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = headings[headings.length - 1];
+      setActive(current.id);
+    }
+
+    function scheduleUpdate() {
+      if (scheduled) return;
+      scheduled = true;
+      window.requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    tocCleanup = function () {
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+    };
+    update();
+  }
+
   function initPage(scope) {
     window.TypechoComment = commentController;
     initLikeButton(scope);
     initCommentSecurity(scope);
     initHitokoto(scope);
+    initArticleToc(scope);
     dispatch('ato:page-ready', { main: scope, url: window.location.href });
   }
 
