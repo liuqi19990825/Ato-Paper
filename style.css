@@ -151,7 +151,7 @@ img { display: block; max-width: 100%; height: auto; }
 .empty-paper p { margin: 0; color: var(--muted); line-height: 1.8; }
 
 /* Reading page */
-.reading-page { width: min(760px, calc(100% - 40px)); padding-block: 45px 110px; }
+.reading-page { width: min(720px, calc(100% - 40px)); padding-block: 45px 110px; }
 .back-link { display: inline-block; margin-bottom: 55px; color: var(--muted); font: 500 11px/1 var(--sans); }
 .back-link:hover { color: var(--accent); }
 .diary-header { text-align: left; }
@@ -163,7 +163,7 @@ img { display: block; max-width: 100%; height: auto; }
 .diary-photo { margin: 55px 0 60px; }
 .diary-photo img { width: 100%; max-height: 520px; object-fit: cover; filter: saturate(.78) contrast(.96); }
 .diary-photo figcaption { margin-top: 11px; color: var(--muted); font: 500 9px/1.5 var(--sans); text-align: center; }
-.diary-content { width: min(680px, 100%); margin: 52px auto 0; overflow-wrap: anywhere; }
+.diary-content { width: 100%; margin: 52px 0 0; overflow-wrap: anywhere; }
 .diary-content > p { margin: 0 0 28px; font-size: 17px; line-height: 2.05; }
 .diary-content h2 { margin: 68px 0 25px; font-size: 27px; line-height: 1.5; font-weight: 600; }
 .diary-content h3 { margin: 45px 0 20px; font-size: 21px; line-height: 1.6; }
@@ -182,7 +182,7 @@ img { display: block; max-width: 100%; height: auto; }
 .diary-content th, .diary-content td { padding: 12px 14px; border: 1px solid var(--line); text-align: left; }
 .diary-content th { background: var(--paper-deep); }
 .diary-content hr { margin: 55px 0; border: 0; border-top: 1px solid var(--line); }
-.diary-footer { width: min(680px, 100%); margin: 52px auto 0; padding-top: 25px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); }
+.diary-footer { width: 100%; margin: 52px 0 0; padding-top: 25px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); }
 .tags { display: flex; flex-wrap: wrap; gap: 9px; color: var(--muted); font: 500 10px/1.5 var(--sans); }
 .tags a { color: var(--accent); margin-right: 8px; }
 .like-button { padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); cursor: pointer; font: 500 10px/1 var(--sans); transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease; }
@@ -307,7 +307,8 @@ img { display: block; max-width: 100%; height: auto; }
   .filing-inner { min-height: 82px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 9px; padding-block: 16px; }
   .filing-links { flex-wrap: wrap; gap: 8px 14px; }
   .filing-links a + a::before { margin-right: 6px; }
-  .reading-page, .archive-page, .now-page { width: min(100% - 32px, 680px); padding-top: 32px; }
+  .reading-page { width: min(100% - 32px, 720px); padding-top: 32px; }
+  .archive-page, .now-page { width: min(100% - 32px, 680px); padding-top: 32px; }
   .back-link { margin-bottom: 42px; }
   .diary-header h1 { font-size: 32px; line-height: 1.45; letter-spacing: -.025em; }
   .diary-photo { margin-block: 42px 48px; }
