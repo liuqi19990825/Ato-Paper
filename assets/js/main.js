@@ -247,6 +247,24 @@
     }, { capture: true });
   }
 
+  function initAvatarFallbacks(scope) {
+    Array.prototype.slice.call(scope.querySelectorAll('img[data-avatar-fallback]')).forEach(function (avatar) {
+      if (avatar.getAttribute('data-ato-avatar-ready') === 'true') return;
+      avatar.setAttribute('data-ato-avatar-ready', 'true');
+
+      function useFallback() {
+        var fallback = avatar.getAttribute('data-avatar-fallback');
+        if (!fallback || avatar.getAttribute('data-avatar-fallback-used') === 'true') return;
+        avatar.setAttribute('data-avatar-fallback-used', 'true');
+        avatar.removeAttribute('srcset');
+        avatar.src = fallback;
+      }
+
+      avatar.addEventListener('error', useFallback, { once: true });
+      if (avatar.complete && avatar.naturalWidth === 0) useFallback();
+    });
+  }
+
   function initCommentEmotes(scope) {
     var roots = Array.prototype.slice.call(scope.querySelectorAll('[data-comment-emotes]'));
 
@@ -588,6 +606,7 @@
     initLikeButton(scope);
     initCommentSecurity(scope);
     initCommentQQ(scope);
+    initAvatarFallbacks(scope);
     initCommentEmotes(scope);
     initHitokoto(scope);
     initCodeBlocks(scope);

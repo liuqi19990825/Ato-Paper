@@ -130,6 +130,37 @@ function themeConfig($form)
     );
     $form->addInput($commentContactMode);
 
+    $commentAvatarSource = new \Typecho\Widget\Helper\Form\Element\Select(
+        'commentAvatarSource',
+        [
+            'cravatar' => _t('Cravatar 国内头像源（推荐）'),
+            'gravatar' => _t('Gravatar 官方源'),
+            'custom' => _t('自定义兼容头像源')
+        ],
+        'cravatar',
+        _t('评论头像源'),
+        _t('用于 Email 评论及 QQ 头像加载失败时的备用头像。QQ 评论仍优先读取 QQ 头像。')
+    );
+    $form->addInput($commentAvatarSource);
+
+    $commentAvatarCustomBase = new \Typecho\Widget\Helper\Form\Element\Text(
+        'commentAvatarCustomBase',
+        null,
+        null,
+        _t('自定义头像源地址'),
+        _t('仅在上方选择“自定义”时使用。填写兼容 Gravatar 的基础地址，例如：https://example.com/avatar/；也支持在地址中使用 {hash}。')
+    );
+    $form->addInput($commentAvatarCustomBase);
+
+    $commentAvatarDefault = new \Typecho\Widget\Helper\Form\Element\Text(
+        'commentAvatarDefault',
+        null,
+        'identicon',
+        _t('无头像时的默认图'),
+        _t('可填 identicon、mp、retro、monsterid、wavatar、robohash，或一张公开图片的完整 URL；这里可以使用 SM.MS 图片直链。')
+    );
+    $form->addInput($commentAvatarDefault);
+
     $defaultNow = "2026-08-05|博客|给这个小世界重新铺一层纸|整理歌单，补几篇拖了很久的文章，也在认真把博客装修得更舒服一点。\n"
         . "2026-07-29|正在听|最近总在循环一些有雨声的歌|安静的鼓点和稍远一点的人声，很适合七月底闷热的夜晚。\n"
         . "2026-07-21|游戏|慢慢体验姬子·启行|没有急着追进度，一边体验剧情和机甲演出，一边记下机制与手感。\n"
@@ -429,19 +460,87 @@ function ato_comment_qq($mail)
 }
 
 /**
- * QQ 邮箱评论使用 QQ 头像，其余评论继续使用 Typecho Gravatar。
+ * 返回经过校验的默认头像标识或外部图片地址。
+ */
+function ato_avatar_default($options)
+{
+    $default = ato_option($options, 'commentAvatarDefault', 'identicon');
+    if (preg_match('/^https?:\/\//i', $default) && filter_var($default, FILTER_VALIDATE_URL)) {
+        return $default;
+    }
+
+    $allowed = ['404', 'mp', 'identicon', 'monsterid', 'wavatar', 'retro', 'robohash', 'blank'];
+    return in_array(strtolower($default), $allowed, true) ? strtolower($default) : 'identicon';
+}
+
+/**
+ * 返回评论头像服务的基础地址。
+ */
+function ato_avatar_source_base($options)
+{
+    $source = ato_option($options, 'commentAvatarSource', 'cravatar');
+    if ($source === 'gravatar') {
+        return 'https://gravatar.com/avatar/';
+    }
+
+    if ($source === 'custom') {
+        $custom = ato_option($options, 'commentAvatarCustomBase');
+        $probe = str_replace(['{hash}', '{size}'], ['00000000000000000000000000000000', '42'], $custom);
+        if (preg_match('/^https?:\/\//i', $probe) && filter_var($probe, FILTER_VALIDATE_URL)) {
+            return $custom;
+        }
+    }
+
+    return 'https://cravatar.cn/avatar/';
+}
+
+/**
+ * 按 Gravatar 兼容格式生成邮箱头像地址。
+ */
+function ato_mail_avatar_url($options, $mail, $size = 42)
+{
+    $size = max(16, min(512, (int) $size));
+    $hash = md5(strtolower(trim((string) $mail)));
+    $base = ato_avatar_source_base($options);
+
+    if (strpos($base, '{hash}') !== false) {
+        $url = str_replace(['{hash}', '{size}'], [$hash, (string) $size], $base);
+    } else {
+        $queryPosition = strpos($base, '?');
+        $basePath = $queryPosition === false ? $base : substr($base, 0, $queryPosition);
+        $baseQuery = $queryPosition === false ? '' : substr($base, $queryPosition + 1);
+        $url = rtrim($basePath, '/') . '/' . $hash . ($baseQuery !== '' ? '?' . $baseQuery : '');
+        $url = str_replace('{size}', (string) $size, $url);
+    }
+
+    $query = http_build_query([
+        's' => $size,
+        'd' => ato_avatar_default($options),
+        'r' => 'g',
+    ], '', '&', PHP_QUERY_RFC3986);
+
+    return $url . (strpos($url, '?') === false ? '?' : '&') . $query;
+}
+
+/**
+ * QQ 邮箱评论优先使用 QQ 头像，其余评论使用后台选择的头像源。
  */
 function ato_comment_avatar($comments, $size = 42)
 {
-    $qq = ato_comment_qq((string) $comments->mail);
-    if ($qq === '') {
-        $comments->gravatar($size, null, true);
-        return;
+    $options = \Widget\Options::alloc();
+    $mail = (string) $comments->mail;
+    $qq = ato_comment_qq($mail);
+    $avatarUrl = $qq !== ''
+        ? 'https://q2.qlogo.cn/headimg_dl?dst_uin=' . rawurlencode($qq) . '&spec=100'
+        : ato_mail_avatar_url($options, $mail, $size);
+    $fallbackUrl = $qq !== '' ? ato_mail_avatar_url($options, $mail, $size) : '';
+    $defaultAvatar = ato_avatar_default($options);
+    if ($fallbackUrl === '' && preg_match('/^https?:\/\//i', $defaultAvatar)) {
+        $fallbackUrl = $defaultAvatar;
     }
 
-    $avatarUrl = 'https://q2.qlogo.cn/headimg_dl?dst_uin=' . rawurlencode($qq) . '&spec=100';
     ?>
-    <img class="avatar avatar-qq" src="<?php ato_e($avatarUrl); ?>" width="<?php echo (int) $size; ?>" height="<?php echo (int) $size; ?>" loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="<?php ato_e((string) $comments->author); ?>的 QQ 头像">
+    <img class="avatar<?php echo $qq !== '' ? ' avatar-qq' : ''; ?>" src="<?php ato_e($avatarUrl); ?>"<?php if ($qq === ''): ?> srcset="<?php ato_e(ato_mail_avatar_url($options, $mail, $size * 2)); ?> 2x, <?php ato_e(ato_mail_avatar_url($options, $mail, $size * 3)); ?> 3x"<?php endif; ?><?php if ($fallbackUrl !== ''): ?> data-avatar-fallback="<?php ato_e($fallbackUrl); ?>"<?php endif; ?> width="<?php echo (int) $size; ?>" height="<?php echo (int) $size; ?>" loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="<?php ato_e((string) $comments->author); ?>的头像">
     <?php
 }
 
