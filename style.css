@@ -58,8 +58,8 @@ img { display: block; max-width: 100%; height: auto; }
 .desktop-nav { display: flex; align-items: center; gap: 26px; margin-left: auto; font: 500 12px/1 var(--sans); }
 .desktop-nav a { position: relative; padding: 8px 0; color: var(--muted); transition: color .2s ease, transform .2s ease; }
 .desktop-nav a::after { content: ""; position: absolute; left: 50%; right: 50%; bottom: 2px; height: 1px; background: var(--accent); transition: left .2s ease, right .2s ease; }
-.desktop-nav a:hover, .desktop-nav a.current { color: var(--ink); transform: translateY(-1px); }
-.desktop-nav a:hover::after, .desktop-nav a.current::after { left: 0; right: 0; }
+.desktop-nav a:hover { color: var(--ink); transform: translateY(-1px); }
+.desktop-nav a:hover::after { left: 0; right: 0; }
 .header-tools { display: flex; align-items: center; gap: 9px; margin-left: 25px; }
 .search-button, .theme-toggle { height: 34px; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; cursor: pointer; transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .2s ease, box-shadow .2s ease; }
 .search-button { width: 34px; display: grid; place-items: center; }
