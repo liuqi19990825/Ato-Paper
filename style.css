@@ -102,7 +102,9 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .hello h1 { margin: 0 0 25px; font-size: clamp(38px, 6vw, 58px); line-height: 1.2; font-weight: 500; letter-spacing: -.045em; }
 .hello-copy > p { max-width: 570px; margin: 0; font-size: 16px; line-height: 2; }
 .hello-copy .hello-soft { margin-top: 12px; color: var(--muted); font-size: 14px; }
-.hello-soft small { margin-left: 8px; color: color-mix(in srgb, var(--muted) 84%, var(--ink)); font: 500 12px/1.7 var(--sans); }
+.hello-soft[data-hitokoto] { display: flex; max-width: 550px; margin-top: 17px; padding-left: 14px; flex-direction: column; gap: 5px; border-left: 2px solid color-mix(in srgb, var(--accent) 58%, transparent); line-height: 1.9; }
+.hello-soft [data-hitokoto-text] { display: block; overflow-wrap: anywhere; }
+.hello-soft small { display: block; max-width: 80%; margin: 0 4px 0 auto; color: color-mix(in srgb, var(--muted) 84%, var(--ink)); font: 500 11px/1.7 var(--sans); text-align: right; overflow-wrap: anywhere; }
 .hello-postcard { width: 250px; margin: 0; padding: 10px 10px 32px; background: #f4efe4; box-shadow: 0 15px 35px rgba(69, 53, 37, .12); transform: rotate(2.2deg); }
 :root[data-theme="dark"] .hello-postcard { background: #343028; }
 .hello-postcard img { width: 100%; height: 285px; object-fit: cover; object-position: 63% 58%; filter: saturate(.72) contrast(.96); }

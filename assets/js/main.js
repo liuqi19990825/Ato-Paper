@@ -215,10 +215,14 @@
       textNode.textContent = '“' + data.hitokoto.trim() + '”';
       var author = typeof data.from_who === 'string' ? data.from_who.trim() : '';
       var work = typeof data.from === 'string' ? data.from.trim() : '';
-      var source = author && work ? author + ' · ' + work : (author || work);
+      var sameSource = author && work && author.localeCompare(work, undefined, { sensitivity: 'base' }) === 0;
+      var source = author && work && !sameSource ? author + ' · ' + work : (author || work);
       if (fromNode && source) {
         fromNode.textContent = '—— ' + source;
         fromNode.hidden = false;
+      } else if (fromNode) {
+        fromNode.textContent = '';
+        fromNode.hidden = true;
       }
       return true;
     }
