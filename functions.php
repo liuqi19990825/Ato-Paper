@@ -121,12 +121,12 @@ function themeConfig($form)
     $commentContactMode = new \Typecho\Widget\Helper\Form\Element\Radio(
         'commentContactMode',
         [
-            'qq' => _t('使用 QQ 号，并显示 QQ 头像'),
-            'email' => _t('使用 Email 与 Gravatar')
+            'qq' => _t('自动识别 QQ 或 Email（推荐）'),
+            'email' => _t('仅使用 Email')
         ],
         'qq',
         _t('评论联系方式'),
-        _t('QQ 模式会把号码转换为“QQ号@qq.com”交给 Typecho 保存，并通过腾讯 QQ 头像地址显示头像；已有邮箱评论不受影响。')
+        _t('自动识别模式使用一个“联系方式”输入框：数字 QQ 会显示 QQ 头像，Email 会使用所选头像源。已有评论不受影响。')
     );
     $form->addInput($commentContactMode);
 

@@ -201,49 +201,73 @@
     form.addEventListener('submit', appendToken, { capture: true });
   }
 
-  function initCommentQQ(scope) {
+  function initCommentContact(scope) {
     var form = scope.querySelector('#comment-form');
-    if (!form || form.getAttribute('data-ato-qq-ready') === 'true') return;
+    if (!form || form.getAttribute('data-ato-contact-ready') === 'true') return;
 
-    var qqInput = form.querySelector('[data-comment-qq]');
+    var contactInput = form.querySelector('[data-comment-contact]');
     var mailInput = form.querySelector('[data-comment-mail]');
-    if (!qqInput || !mailInput) return;
-    form.setAttribute('data-ato-qq-ready', 'true');
+    if (!contactInput || !mailInput) return;
+    form.setAttribute('data-ato-contact-ready', 'true');
 
     var qqPattern = /^[1-9][0-9]{4,11}$/;
-    var remembered = String(mailInput.value || '').trim().match(/^([1-9][0-9]{4,11})@qq\.com$/i);
-    if (remembered && !qqInput.value) qqInput.value = remembered[1];
-    else if (!remembered && !qqInput.value) mailInput.value = '';
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var rememberedMail = String(mailInput.value || '').trim();
+    var rememberedQQ = rememberedMail.match(/^([1-9][0-9]{4,11})@qq\.com$/i);
+    var field = contactInput.closest('label');
+    var hint = field ? field.querySelector('[data-comment-contact-hint]') : null;
+    var defaultHint = '填写 QQ 将显示 QQ 头像，填写 Email 将使用邮箱头像。';
+    if (!contactInput.value && rememberedMail) contactInput.value = rememberedQQ ? rememberedQQ[1] : rememberedMail;
 
-    function syncQQ(showMessage) {
-      var qq = String(qqInput.value || '').trim();
-      qqInput.value = qq;
-      qqInput.setCustomValidity('');
-
-      if (!qq) {
-        mailInput.value = '';
-        return !qqInput.required;
+    function setContactKind(kind) {
+      if (field) {
+        field.classList.toggle('is-qq', kind === 'qq');
+        field.classList.toggle('is-email', kind === 'email');
       }
-
-      if (!qqPattern.test(qq)) {
-        mailInput.value = '';
-        if (showMessage) qqInput.setCustomValidity('请填写 5—12 位、且不以 0 开头的 QQ 号。');
-        return false;
-      }
-
-      mailInput.value = qq + '@qq.com';
-      return true;
+      if (!hint) return;
+      if (kind === 'qq') hint.textContent = '已识别为 QQ，将显示 QQ 头像。';
+      else if (kind === 'email') hint.textContent = '已识别为 Email，将使用所选邮箱头像源。';
+      else hint.textContent = defaultHint;
     }
 
-    syncQQ(false);
-    qqInput.addEventListener('input', function () { syncQQ(false); });
-    qqInput.addEventListener('blur', function () { syncQQ(true); });
-    qqInput.addEventListener('invalid', function () { syncQQ(true); });
+    function syncContact(showMessage) {
+      var contact = String(contactInput.value || '').trim();
+      contactInput.value = contact;
+      contactInput.setCustomValidity('');
+
+      if (!contact) {
+        mailInput.value = '';
+        setContactKind('');
+        return !contactInput.required;
+      }
+
+      if (qqPattern.test(contact)) {
+        mailInput.value = contact + '@qq.com';
+        setContactKind('qq');
+        return true;
+      }
+
+      if (emailPattern.test(contact)) {
+        mailInput.value = contact;
+        setContactKind('email');
+        return true;
+      }
+
+      mailInput.value = '';
+      setContactKind('');
+      if (showMessage) contactInput.setCustomValidity('请填写有效的 QQ 号或 Email。');
+      return false;
+    }
+
+    syncContact(false);
+    contactInput.addEventListener('input', function () { syncContact(false); });
+    contactInput.addEventListener('blur', function () { syncContact(true); });
+    contactInput.addEventListener('invalid', function () { syncContact(true); });
     form.addEventListener('submit', function (event) {
-      if (syncQQ(true)) return;
+      if (syncContact(true)) return;
       event.preventDefault();
-      qqInput.reportValidity();
-      qqInput.focus();
+      contactInput.reportValidity();
+      contactInput.focus();
     }, { capture: true });
   }
 
@@ -605,7 +629,7 @@
     window.TypechoComment = commentController;
     initLikeButton(scope);
     initCommentSecurity(scope);
-    initCommentQQ(scope);
+    initCommentContact(scope);
     initAvatarFallbacks(scope);
     initCommentEmotes(scope);
     initHitokoto(scope);

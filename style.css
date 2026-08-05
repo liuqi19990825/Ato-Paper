@@ -307,7 +307,7 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 }
 
 /* Now timeline */
-.now-page { width: min(760px, calc(100% - 40px)); padding-block: 45px 115px; }
+.now-page { width: min(720px, calc(100% - 40px)); padding-block: 45px 115px; }
 .now-page-header { position: relative; max-width: 680px; margin-bottom: 76px; }
 .now-page-header::after { content: "✦"; position: absolute; right: 18px; bottom: -12px; color: var(--accent); font-size: 17px; transform: rotate(9deg); }
 .now-page-header h1 { margin: 0 0 22px; font-size: clamp(42px, 7vw, 62px); line-height: 1.2; font-weight: 500; letter-spacing: -.05em; }
@@ -398,7 +398,8 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
   .filing-links { flex-wrap: wrap; gap: 8px 14px; }
   .filing-links a + a::before { margin-right: 6px; }
   .reading-page { width: min(100% - 32px, 720px); padding-top: 32px; }
-  .archive-page, .now-page { width: min(100% - 32px, 680px); padding-top: 32px; }
+  .archive-page { width: min(100% - 32px, 680px); padding-top: 32px; }
+  .now-page { width: min(100% - 32px, 720px); padding-top: 32px; }
   .back-link { margin-bottom: 42px; }
   .diary-header h1 { font-size: 32px; line-height: 1.45; letter-spacing: -.025em; }
   .diary-photo { margin-block: 42px 48px; }
@@ -479,11 +480,15 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .hljs-strong { font-weight: 700; }
 
 /* QQ comment contact */
-.comment-qq-field small { margin-top: -2px; color: var(--muted); font: 500 10px/1.55 var(--sans); }
+.comment-contact-field small, .comment-qq-field small { margin-top: -2px; color: var(--muted); font: 500 10px/1.55 var(--sans); transition: color .18s ease; }
+.comment-contact-field.is-qq input { border-color: color-mix(in srgb, var(--accent) 58%, var(--line)); }
+.comment-contact-field.is-qq small { color: var(--accent); }
+.comment-contact-field.is-email input { border-color: color-mix(in srgb, var(--green) 66%, var(--line)); }
+.comment-contact-field.is-email small { color: var(--green); }
 .comment-card .avatar-qq { background: var(--paper-deep); object-fit: cover; }
 
 /* Friends page */
-.friends-page { width: min(820px, calc(100% - 40px)); padding-block: 45px 115px; }
+.friends-page { width: min(720px, calc(100% - 40px)); padding-block: 45px 115px; }
 .friends-page-header { margin-bottom: 55px; }
 .friends-page-header h1 { margin: 0 0 23px; font-size: clamp(42px, 7vw, 60px); line-height: 1.2; font-weight: 500; letter-spacing: -.05em; }
 .friends-page-lead { display: flex; align-items: flex-end; justify-content: space-between; gap: 35px; padding-bottom: 24px; border-bottom: 1px solid var(--ink); }
@@ -515,7 +520,7 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .friends-page > .comments-area { width: min(720px, 100%); margin-inline: auto; }
 
 @media (max-width: 760px) {
-  .friends-page { width: min(100% - 32px, 680px); padding-top: 32px; }
+  .friends-page { width: min(100% - 32px, 720px); padding-top: 32px; }
   .friends-page-header h1 { font-size: 40px; }
   .friends-page-lead { align-items: flex-start; flex-direction: column; gap: 14px; }
   .friend-grid { grid-template-columns: 1fr; gap: 22px; }
