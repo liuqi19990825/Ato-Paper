@@ -165,8 +165,6 @@ img { display: block; max-width: 100%; height: auto; }
 .diary-photo figcaption { margin-top: 11px; color: var(--muted); font: 500 9px/1.5 var(--sans); text-align: center; }
 .diary-content { width: min(680px, 100%); margin: 52px auto 0; overflow-wrap: anywhere; }
 .diary-content > p { margin: 0 0 28px; font-size: 17px; line-height: 2.05; }
-.diary-content > p:first-child::first-letter { float: left; margin: 8px 7px 0 0; color: var(--accent); font: 500 42px/.84 Georgia, serif; }
-.diary-content.no-drop-cap > p:first-child::first-letter { float: none; margin: 0; color: inherit; font: inherit; }
 .diary-content h2 { margin: 68px 0 25px; font-size: 27px; line-height: 1.5; font-weight: 600; }
 .diary-content h3 { margin: 45px 0 20px; font-size: 21px; line-height: 1.6; }
 .diary-content a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
