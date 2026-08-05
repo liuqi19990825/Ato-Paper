@@ -35,6 +35,44 @@
 
                 <label class="comment-textarea-label" for="textarea">留言内容</label>
                 <textarea id="textarea" name="text" rows="6" placeholder="写下你的想法……" required><?php $this->remember('text'); ?></textarea>
+                <div class="comment-emote-tools" data-comment-emotes>
+                    <button class="comment-emote-toggle" type="button" data-emote-toggle aria-expanded="false" aria-controls="comment-emote-panel">
+                        <span aria-hidden="true">☺</span><b>表情</b><i aria-hidden="true">＋</i>
+                    </button>
+                    <div class="comment-emote-popover" id="comment-emote-panel" data-emote-popover hidden>
+                        <div class="comment-emote-tabs" role="tablist" aria-label="选择表情分类">
+                            <button type="button" id="emote-tab-kaomoji" role="tab" aria-selected="true" aria-controls="emote-panel-kaomoji" data-emote-tab="kaomoji">颜文字</button>
+                            <button type="button" id="emote-tab-tieba" role="tab" aria-selected="false" aria-controls="emote-panel-tieba" data-emote-tab="tieba" tabindex="-1">贴吧泡泡</button>
+                            <button type="button" id="emote-tab-bilibili" role="tab" aria-selected="false" aria-controls="emote-panel-bilibili" data-emote-tab="bilibili" tabindex="-1">Bilibili</button>
+                        </div>
+
+                        <div class="comment-emote-grid comment-kaomoji-grid" id="emote-panel-kaomoji" role="tabpanel" aria-labelledby="emote-tab-kaomoji" data-emote-panel="kaomoji">
+                            <?php foreach (ato_kaomoji_list() as $kaomoji): ?>
+                                <button type="button" data-emote-value="<?php ato_e($kaomoji); ?>" title="插入 <?php ato_e($kaomoji); ?>"><?php ato_e($kaomoji); ?></button>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="comment-emote-grid comment-image-emote-grid" id="emote-panel-tieba" role="tabpanel" aria-labelledby="emote-tab-tieba" data-emote-panel="tieba" hidden>
+                            <?php foreach (ato_tieba_emotes() as $name => $emote): ?>
+                                <button type="button" data-emote-value=" :<?php ato_e($name); ?>: " aria-label="插入贴吧表情：<?php ato_e($emote['label']); ?>" title="<?php ato_e($emote['label']); ?>">
+                                    <img src="<?php ato_e(ato_emote_asset_url($this->options, 'tieba', $emote['file'])); ?>" width="32" height="32" loading="lazy" decoding="async" alt="">
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="comment-emote-grid comment-image-emote-grid" id="emote-panel-bilibili" role="tabpanel" aria-labelledby="emote-tab-bilibili" data-emote-panel="bilibili" hidden>
+                            <?php foreach (ato_bilibili_emotes() as $name => $emote): ?>
+                                <?php $biliAnimated = (int) $emote['height'] > 32; ?>
+                                <button type="button" data-emote-value=" {{<?php ato_e($name); ?>}} " aria-label="插入 Bilibili 表情：<?php ato_e($emote['label']); ?>" title="<?php ato_e($emote['label']); ?>">
+                                    <span class="comment-emote comment-emote-bilibili<?php echo $biliAnimated ? ' is-animated' : ''; ?>"<?php if ($biliAnimated): ?> style="<?php ato_e(ato_bilibili_sprite_style($emote['height'])); ?>"<?php endif; ?> aria-hidden="true">
+                                        <img src="<?php ato_e(ato_emote_asset_url($this->options, 'bilibili', $name . '.png')); ?>" width="32" height="<?php echo (int) $emote['height']; ?>" loading="lazy" decoding="async" alt="">
+                                    </span>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                        <small>点击即可插入到光标位置</small>
+                    </div>
+                </div>
                 <button class="comment-submit" type="submit">把这句话留下来</button>
             </form>
         </div>

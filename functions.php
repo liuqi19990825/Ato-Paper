@@ -3,6 +3,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
+require_once __DIR__ . '/inc/emotes.php';
+
 /**
  * Ato Paper 主题设置。
  */
@@ -353,7 +355,7 @@ function threadedComments($comments, $options)
                 </div>
                 <?php $comments->reply('<span class="comment-reply">回复</span>'); ?>
             </header>
-            <div class="comment-text"><?php $comments->content(); ?></div>
+            <div class="comment-text"><?php echo ato_render_comment_emotes((string) $comments->content, \Widget\Options::alloc()); ?></div>
         </article>
         <?php if ($comments->children): ?>
             <div class="comment-children"><?php $comments->threadedComments(); ?></div>

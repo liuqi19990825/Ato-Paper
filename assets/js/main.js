@@ -201,6 +201,95 @@
     form.addEventListener('submit', appendToken, { capture: true });
   }
 
+  function initCommentEmotes(scope) {
+    var roots = Array.prototype.slice.call(scope.querySelectorAll('[data-comment-emotes]'));
+
+    roots.forEach(function (emoteRoot) {
+      if (emoteRoot.getAttribute('data-ato-ready') === 'true') return;
+      emoteRoot.setAttribute('data-ato-ready', 'true');
+
+      var form = emoteRoot.closest('form');
+      var textarea = form ? form.querySelector('textarea[name="text"]') : null;
+      var toggle = emoteRoot.querySelector('[data-emote-toggle]');
+      var popover = emoteRoot.querySelector('[data-emote-popover]');
+      var tabs = Array.prototype.slice.call(emoteRoot.querySelectorAll('[data-emote-tab]'));
+      var panels = Array.prototype.slice.call(emoteRoot.querySelectorAll('[data-emote-panel]'));
+      var items = Array.prototype.slice.call(emoteRoot.querySelectorAll('[data-emote-value]'));
+      if (!textarea || !toggle || !popover) return;
+
+      function setOpen(open) {
+        popover.hidden = !open;
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        emoteRoot.classList.toggle('is-open', open);
+      }
+
+      function activateTab(name, focusTab) {
+        tabs.forEach(function (tab) {
+          var active = tab.getAttribute('data-emote-tab') === name;
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          tab.tabIndex = active ? 0 : -1;
+          if (active && focusTab) tab.focus();
+        });
+        panels.forEach(function (panel) {
+          panel.hidden = panel.getAttribute('data-emote-panel') !== name;
+        });
+      }
+
+      function insertAtCursor(value) {
+        var start = typeof textarea.selectionStart === 'number' ? textarea.selectionStart : textarea.value.length;
+        var end = typeof textarea.selectionEnd === 'number' ? textarea.selectionEnd : start;
+
+        if (typeof textarea.setRangeText === 'function') {
+          textarea.setRangeText(value, start, end, 'end');
+        } else {
+          textarea.value = textarea.value.slice(0, start) + value + textarea.value.slice(end);
+        }
+
+        textarea.focus();
+        try {
+          textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        } catch (error) {
+          var inputEvent = document.createEvent('Event');
+          inputEvent.initEvent('input', true, true);
+          textarea.dispatchEvent(inputEvent);
+        }
+      }
+
+      toggle.addEventListener('click', function () {
+        setOpen(popover.hidden);
+      });
+
+      tabs.forEach(function (tab, index) {
+        tab.addEventListener('click', function () {
+          activateTab(tab.getAttribute('data-emote-tab'), false);
+        });
+        tab.addEventListener('keydown', function (event) {
+          var nextIndex = null;
+          if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+          if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === 'Home') nextIndex = 0;
+          if (event.key === 'End') nextIndex = tabs.length - 1;
+          if (nextIndex === null) return;
+          event.preventDefault();
+          activateTab(tabs[nextIndex].getAttribute('data-emote-tab'), true);
+        });
+      });
+
+      items.forEach(function (item) {
+        item.addEventListener('click', function () {
+          insertAtCursor(item.getAttribute('data-emote-value') || '');
+        });
+      });
+
+      emoteRoot.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape' || popover.hidden) return;
+        event.preventDefault();
+        setOpen(false);
+        toggle.focus();
+      });
+    });
+  }
+
   function initHitokoto(scope) {
     var container = scope.querySelector('[data-hitokoto]');
     if (!container || container.getAttribute('data-ato-ready') === 'true') return;
@@ -334,6 +423,7 @@
     window.TypechoComment = commentController;
     initLikeButton(scope);
     initCommentSecurity(scope);
+    initCommentEmotes(scope);
     initHitokoto(scope);
     initArticleToc(scope);
     dispatch('ato:page-ready', { main: scope, url: window.location.href });
