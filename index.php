@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.3.0
+ * @version 0.3.1
  * @link https://atowo.work/
  */
 
@@ -14,6 +14,7 @@ $this->need('header.php');
 $heroImage = ato_option($this->options, 'heroImage');
 $heroSoft = ato_option($this->options, 'heroSoft', '如果其中某一篇刚好让你停下来读了一会儿，那就很好。');
 $heroSoftSource = ato_option($this->options, 'heroSoftSource', 'manual');
+$aboutPageUrl = ato_site_url($this->options, ato_option($this->options, 'aboutPageUrl', 'about-me.html'));
 $moments = ato_now_items(ato_option($this->options, 'nowItems'));
 $latestMoment = $moments[0] ?? [
     'dateLabel' => date('m.d'),
@@ -101,8 +102,10 @@ $entryIndex = 0;
             </section>
 
             <section class="side-section side-about">
-                <h2>关于 <?php $this->options->title(); ?></h2>
-                <p><?php $this->options->description(); ?></p>
+                <a class="side-about-main" href="<?php ato_e($aboutPageUrl); ?>" aria-label="前往关于页面">
+                    <h2>关于 <?php $this->options->title(); ?><span aria-hidden="true">→</span></h2>
+                    <p><?php $this->options->description(); ?></p>
+                </a>
                 <div class="side-links">
                     <?php if (ato_option($this->options, 'bilibiliUrl') !== ''): ?><a href="<?php ato_e(ato_option($this->options, 'bilibiliUrl')); ?>" target="_blank" rel="noreferrer">Bilibili</a><?php endif; ?>
                     <?php if (ato_option($this->options, 'githubUrl') !== ''): ?><a href="<?php ato_e(ato_option($this->options, 'githubUrl')); ?>" target="_blank" rel="noreferrer">GitHub</a><?php endif; ?>

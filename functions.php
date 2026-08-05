@@ -89,6 +89,15 @@ function themeConfig($form)
     );
     $form->addInput($nowPageUrl);
 
+    $aboutPageUrl = new \Typecho\Widget\Helper\Form\Element\Text(
+        'aboutPageUrl',
+        null,
+        'about-me.html',
+        _t('关于页面地址'),
+        _t('首页侧栏的“关于”区域会跳转到这里；可填写相对地址或完整 URL。')
+    );
+    $form->addInput($aboutPageUrl);
+
     $defaultNow = "2026-08-05|博客|给这个小世界重新铺一层纸|整理歌单，补几篇拖了很久的文章，也在认真把博客装修得更舒服一点。\n"
         . "2026-07-29|正在听|最近总在循环一些有雨声的歌|安静的鼓点和稍远一点的人声，很适合七月底闷热的夜晚。\n"
         . "2026-07-21|游戏|慢慢体验姬子·启行|没有急着追进度，一边体验剧情和机甲演出，一边记下机制与手感。\n"
