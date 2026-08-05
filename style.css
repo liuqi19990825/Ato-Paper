@@ -280,16 +280,25 @@ img { display: block; max-width: 100%; height: auto; }
   .header-inner { min-height: 64px; }
   .desktop-nav, .theme-label { display: none; }
   .header-tools { margin-left: auto; }
-  .theme-toggle { width: 34px; padding: 0; justify-content: center; }
+  .search-button, .theme-toggle { width: 40px; height: 40px; }
+  .theme-toggle { padding: 0; justify-content: center; }
   .mobile-menu { display: block; position: relative; }
-  .mobile-menu summary { min-width: 55px; height: 34px; padding: 0 9px; display: flex; align-items: center; justify-content: center; gap: 5px; list-style: none; border: 1px solid transparent; border-radius: 999px; cursor: pointer; font: 600 10px/1 var(--sans); transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+  .mobile-menu summary { min-width: 70px; height: 40px; padding: 0 12px; display: flex; align-items: center; justify-content: center; gap: 8px; list-style: none; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; font: 600 13px/1 var(--sans); transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .2s ease, box-shadow .2s ease; }
   .mobile-menu summary::-webkit-details-marker { display: none; }
-  .mobile-menu summary::after { content: "+"; display: inline-block; color: var(--accent); font-size: 13px; transition: color .2s ease, transform .25s ease; }
+  .mobile-menu summary::marker { content: ""; }
+  .menu-glyph { position: relative; width: 15px; height: 12px; flex: 0 0 15px; color: var(--accent); }
+  .menu-glyph::before, .menu-glyph::after { content: ""; position: absolute; left: 0; width: 15px; height: 1.5px; border-radius: 999px; background: currentColor; transform-origin: center; transition: top .25s ease, transform .25s ease, color .2s ease; }
+  .menu-glyph::before { top: 3px; }
+  .menu-glyph::after { top: 8px; }
   .mobile-menu summary:active { transform: scale(.94); }
-  .mobile-menu[open] summary { color: #fff; border-color: var(--accent); background: var(--accent); transform: translateY(-1px) rotate(-2deg); box-shadow: 0 5px 13px color-mix(in srgb, var(--accent) 25%, transparent); }
-  .mobile-menu[open] summary::after { color: #fff; transform: rotate(45deg); }
-  .mobile-menu nav { position: absolute; right: 0; top: 44px; width: 160px; padding: 10px; display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 15px 30px rgba(0, 0, 0, .1); transform-origin: top right; animation: mobile-menu-reveal .22s cubic-bezier(.2, .75, .25, 1); }
-  .mobile-menu nav a { padding: 10px; border-radius: 4px; font: 500 11px/1 var(--sans); transition: color .18s ease, background-color .18s ease, transform .18s ease; }
+  .mobile-menu summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .mobile-menu[open] summary { color: #fff; border-color: var(--accent); background: var(--accent); transform: translateY(-1px); box-shadow: 0 5px 13px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .mobile-menu[open] .menu-glyph { color: #fff; }
+  .mobile-menu[open] .menu-glyph::before, .mobile-menu[open] .menu-glyph::after { top: 5px; }
+  .mobile-menu[open] .menu-glyph::before { transform: rotate(45deg); }
+  .mobile-menu[open] .menu-glyph::after { transform: rotate(-45deg); }
+  .mobile-menu nav { position: absolute; right: 0; top: 50px; width: 180px; padding: 9px; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-shadow: 0 15px 30px rgba(0, 0, 0, .1); transform-origin: top right; animation: mobile-menu-reveal .22s cubic-bezier(.2, .75, .25, 1); }
+  .mobile-menu nav a { min-height: 42px; padding: 0 13px; display: flex; align-items: center; border-radius: 5px; font: 500 14px/1.3 var(--sans); transition: color .18s ease, background-color .18s ease, transform .18s ease; }
   .mobile-menu nav a:hover, .mobile-menu nav a:focus-visible { color: var(--accent); background: var(--paper-deep); transform: translateX(3px); outline: none; }
   .blog-main { padding-block: 55px 85px; }
   .hello { display: flex; flex-direction: column; align-items: flex-start; gap: 45px; margin-bottom: 80px; }

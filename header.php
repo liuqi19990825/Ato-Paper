@@ -59,7 +59,7 @@ while ($navPages->next()) {
                     <span aria-hidden="true">◐</span><span class="theme-label">深色</span>
                 </button>
                 <details class="mobile-menu">
-                    <summary aria-label="打开菜单">菜单</summary>
+                    <summary aria-label="打开菜单"><span>菜单</span><span class="menu-glyph" aria-hidden="true"></span></summary>
                     <nav>
                         <a href="<?php $this->options->siteUrl(); ?>">首页</a>
                         <a href="<?php $this->options->siteUrl(); ?>#posts">文章</a>
