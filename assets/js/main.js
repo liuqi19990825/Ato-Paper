@@ -200,10 +200,59 @@
     form.addEventListener('submit', appendToken, { capture: true });
   }
 
+  function initHitokoto(scope) {
+    var container = scope.querySelector('[data-hitokoto]');
+    if (!container || container.getAttribute('data-ato-ready') === 'true') return;
+    container.setAttribute('data-ato-ready', 'true');
+
+    var textNode = container.querySelector('[data-hitokoto-text]');
+    var fromNode = container.querySelector('[data-hitokoto-from]');
+    var cacheKey = 'ato-paper-hitokoto-v1';
+
+    function render(data) {
+      if (!data || typeof data.hitokoto !== 'string' || !data.hitokoto.trim() || !textNode) return false;
+      textNode.textContent = '“' + data.hitokoto.trim() + '”';
+      var author = typeof data.from_who === 'string' ? data.from_who.trim() : '';
+      var work = typeof data.from === 'string' ? data.from.trim() : '';
+      var source = author && work ? author + ' · ' + work : (author || work);
+      if (fromNode && source) {
+        fromNode.textContent = '—— ' + source;
+        fromNode.hidden = false;
+      }
+      return true;
+    }
+
+    try {
+      var cached = JSON.parse(sessionStorage.getItem(cacheKey) || 'null');
+      if (render(cached)) return;
+    } catch (error) {}
+
+    if (typeof window.fetch !== 'function' || typeof window.AbortController !== 'function') return;
+    var controller = new AbortController();
+    var timeout = window.setTimeout(function () { controller.abort(); }, 5000);
+
+    window.fetch('https://v1.hitokoto.cn/?encode=json&charset=utf-8', {
+      method: 'GET',
+      mode: 'cors',
+      signal: controller.signal,
+      headers: { Accept: 'application/json' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('Hitokoto request failed.');
+      return response.json();
+    }).then(function (data) {
+      window.clearTimeout(timeout);
+      if (!render(data)) return;
+      try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch (error) {}
+    }).catch(function () {
+      window.clearTimeout(timeout);
+    });
+  }
+
   function initPage(scope) {
     window.TypechoComment = commentController;
     initLikeButton(scope);
     initCommentSecurity(scope);
+    initHitokoto(scope);
     dispatch('ato:page-ready', { main: scope, url: window.location.href });
   }
 

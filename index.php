@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.2.0
+ * @version 0.2.1
  * @link https://atowo.work/
  */
 
@@ -12,6 +12,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $this->need('header.php');
 
 $heroImage = ato_option($this->options, 'heroImage');
+$heroSoft = ato_option($this->options, 'heroSoft', '如果其中某一篇刚好让你停下来读了一会儿，那就很好。');
+$heroSoftSource = ato_option($this->options, 'heroSoftSource', 'manual');
 $moments = ato_now_items(ato_option($this->options, 'nowItems'));
 $latestMoment = $moments[0] ?? [
     'dateLabel' => date('m.d'),
@@ -27,7 +29,14 @@ $entryIndex = 0;
             <span class="little-mark">你好呀 👋</span>
             <h1 id="hello-title"><?php ato_e(ato_option($this->options, 'heroTitle', '这里是 Ato 的小世界。')); ?></h1>
             <p><?php ato_e(ato_option($this->options, 'heroIntro')); ?></p>
-            <p class="hello-soft"><?php ato_e(ato_option($this->options, 'heroSoft')); ?></p>
+            <?php if ($heroSoftSource === 'hitokoto'): ?>
+                <p class="hello-soft" data-hitokoto aria-live="polite">
+                    <span data-hitokoto-text><?php ato_e($heroSoft); ?></span>
+                    <small data-hitokoto-from hidden></small>
+                </p>
+            <?php else: ?>
+                <p class="hello-soft"><?php ato_e($heroSoft); ?></p>
+            <?php endif; ?>
         </div>
         <figure class="hello-postcard">
             <?php if ($heroImage !== ''): ?>

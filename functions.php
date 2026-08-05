@@ -34,6 +34,18 @@ function themeConfig($form)
     );
     $form->addInput($heroSoft);
 
+    $heroSoftSource = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'heroSoftSource',
+        [
+            'manual' => _t('使用手动文字'),
+            'hitokoto' => _t('接入一言 API')
+        ],
+        'manual',
+        _t('首页补充文字来源'),
+        _t('选择一言 API 时，上方手动文字会作为接口不可用时的备用内容。')
+    );
+    $form->addInput($heroSoftSource);
+
     $heroImage = new \Typecho\Widget\Helper\Form\Element\Text(
         'heroImage',
         null,
@@ -114,6 +126,22 @@ function themeConfig($form)
         _t('公安备案详情链接')
     );
     $form->addInput($policeUrl);
+
+    $footerClosing = new \Typecho\Widget\Helper\Form\Element\Text(
+        'footerClosing',
+        null,
+        '谢谢你读到这里。',
+        _t('页脚左侧文字')
+    );
+    $form->addInput($footerClosing);
+
+    $footerTagline = new \Typecho\Widget\Helper\Form\Element\Text(
+        'footerTagline',
+        null,
+        '在自己的小角落，慢慢写。',
+        _t('页脚右侧补充文字')
+    );
+    $form->addInput($footerTagline);
 
     $enablePjax = new \Typecho\Widget\Helper\Form\Element\Radio(
         'enablePjax',

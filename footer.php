@@ -1,10 +1,10 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
     <footer class="site-footer">
         <div class="wrap footer-main">
-            <p>谢谢你读到这里。</p>
+            <p><?php ato_e(ato_option($this->options, 'footerClosing', '谢谢你读到这里。')); ?></p>
             <div>
                 <span>© <?php echo date('Y'); ?> <?php $this->options->title(); ?></span>
-                <span>在自己的小角落，慢慢写。</span>
+                <span><?php ato_e(ato_option($this->options, 'footerTagline', '在自己的小角落，慢慢写。')); ?></span>
             </div>
         </div>
         <div class="filing-strip">
