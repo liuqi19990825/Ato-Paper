@@ -1,6 +1,6 @@
 # Ato Paper
 
-一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.5.2。
+一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.5.3。
 
 ## 当前功能
 
@@ -27,12 +27,27 @@
 - 评论联系方式使用单一输入框自动识别 QQ 或 Email，并为 QQ 评论显示 QQ 头像
 - Email 评论头像默认使用 Cravatar 国内源，并可切换到 Gravatar 或自定义兼容头像源
 - 文章代码块支持本地语法高亮、自动语言识别与一键复制
+- 纸张风 404 页面提供站内搜索、返回首页与最近文章入口，并保持正确的 HTTP 404 状态
 
 ## 安装
 
 1. 将完整的 `AtoPaper` 文件夹上传到 Typecho 的 `/usr/themes/` 目录。
 2. 在 Typecho 后台进入“控制台 → 外观”，启用 `Ato Paper`。
 3. 进入“设置外观”填写首页内容、社交链接和备案号。
+
+## 启用主题 404 页面
+
+Typecho 会在找不到内容时自动加载主题的 `404.php`，但前提是 Nginx 先把不存在的路径交给 Typecho。如果浏览器显示的是 Nginx 默认 404，请在当前站点的 `server { ... }` 中使用：
+
+```nginx
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+```
+
+如果已经存在 `location /`，请修改原有规则，不要再添加第二个；尤其要把 `try_files $uri $uri/ =404;` 末尾的 `=404` 改为 `/index.php?$query_string`。保存后先运行 `nginx -t`，确认配置无误再重新加载 Nginx。
+
+主题根目录同时附带 `nginx-typecho.conf.example` 供复制参考。配置生效后，不存在的地址仍会返回正确的 HTTP 404 状态，但页面内容会使用 Ato Paper 的纸张风设计，而不是 Nginx 默认页面。
 
 ## 创建近况页面
 

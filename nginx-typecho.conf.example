@@ -1,0 +1,14 @@
+# Ato Paper / Typecho 路由示例
+# 将下面的 location 块放进当前站点的 server { ... } 中。
+# 如果 server 中已经存在 location /，请修改原有块，不要重复添加。
+
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+# 这条规则让不存在的路径先交给 Typecho。
+# Typecho 会保留 HTTP 404 状态，并加载当前主题的 404.php。
+# 不要继续使用：try_files $uri $uri/ =404;
+#
+# 保存配置后先执行：nginx -t
+# 确认无误后再重新加载 Nginx。
