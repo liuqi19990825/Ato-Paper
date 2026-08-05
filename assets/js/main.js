@@ -201,6 +201,52 @@
     form.addEventListener('submit', appendToken, { capture: true });
   }
 
+  function initCommentQQ(scope) {
+    var form = scope.querySelector('#comment-form');
+    if (!form || form.getAttribute('data-ato-qq-ready') === 'true') return;
+
+    var qqInput = form.querySelector('[data-comment-qq]');
+    var mailInput = form.querySelector('[data-comment-mail]');
+    if (!qqInput || !mailInput) return;
+    form.setAttribute('data-ato-qq-ready', 'true');
+
+    var qqPattern = /^[1-9][0-9]{4,11}$/;
+    var remembered = String(mailInput.value || '').trim().match(/^([1-9][0-9]{4,11})@qq\.com$/i);
+    if (remembered && !qqInput.value) qqInput.value = remembered[1];
+    else if (!remembered && !qqInput.value) mailInput.value = '';
+
+    function syncQQ(showMessage) {
+      var qq = String(qqInput.value || '').trim();
+      qqInput.value = qq;
+      qqInput.setCustomValidity('');
+
+      if (!qq) {
+        mailInput.value = '';
+        return !qqInput.required;
+      }
+
+      if (!qqPattern.test(qq)) {
+        mailInput.value = '';
+        if (showMessage) qqInput.setCustomValidity('请填写 5—12 位、且不以 0 开头的 QQ 号。');
+        return false;
+      }
+
+      mailInput.value = qq + '@qq.com';
+      return true;
+    }
+
+    syncQQ(false);
+    qqInput.addEventListener('input', function () { syncQQ(false); });
+    qqInput.addEventListener('blur', function () { syncQQ(true); });
+    qqInput.addEventListener('invalid', function () { syncQQ(true); });
+    form.addEventListener('submit', function (event) {
+      if (syncQQ(true)) return;
+      event.preventDefault();
+      qqInput.reportValidity();
+      qqInput.focus();
+    }, { capture: true });
+  }
+
   function initCommentEmotes(scope) {
     var roots = Array.prototype.slice.call(scope.querySelectorAll('[data-comment-emotes]'));
 
@@ -342,6 +388,124 @@
     });
   }
 
+  function initCodeBlocks(scope) {
+    if (!window.hljs) return;
+
+    var languageNames = {
+      apache: 'Apache', bash: 'Bash', c: 'C', cpp: 'C++', csharp: 'C#', css: 'CSS',
+      diff: 'Diff', dockerfile: 'Dockerfile', go: 'Go', graphql: 'GraphQL', html: 'HTML',
+      java: 'Java', javascript: 'JavaScript', json: 'JSON', kotlin: 'Kotlin', less: 'Less',
+      lua: 'Lua', makefile: 'Makefile', markdown: 'Markdown', nginx: 'Nginx', objectivec: 'Objective-C',
+      php: 'PHP', plaintext: 'Text', python: 'Python', ruby: 'Ruby', rust: 'Rust', scss: 'SCSS',
+      shell: 'Shell', sql: 'SQL', swift: 'Swift', typescript: 'TypeScript', xml: 'HTML / XML',
+      yaml: 'YAML'
+    };
+    var aliases = { js: 'javascript', jsx: 'javascript', ts: 'typescript', py: 'python', rb: 'ruby', sh: 'shell', yml: 'yaml', md: 'markdown', htm: 'html' };
+
+    function languageFromClass(code) {
+      var match = String(code.className || '').match(/(?:lang(?:uage)?)-([\w-]+)/i);
+      if (match) return match[1].toLowerCase();
+
+      var classes = String(code.className || '').split(/\s+/);
+      for (var i = 0; i < classes.length; i += 1) {
+        if (classes[i] && window.hljs.getLanguage(classes[i])) return classes[i].toLowerCase();
+      }
+      return '';
+    }
+
+    function displayLanguage(language) {
+      var normalized = aliases[language] || language || 'plaintext';
+      return languageNames[normalized] || normalized.replace(/(^|-)([a-z])/g, function (_, dash, letter) {
+        return (dash ? ' ' : '') + letter.toUpperCase();
+      });
+    }
+
+    function copyText(value) {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value);
+
+      return new Promise(function (resolve, reject) {
+        var helper = document.createElement('textarea');
+        helper.value = value;
+        helper.setAttribute('readonly', 'readonly');
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        document.body.appendChild(helper);
+        helper.select();
+        try {
+          if (!document.execCommand('copy')) throw new Error('Copy command failed.');
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+        document.body.removeChild(helper);
+      });
+    }
+
+    Array.prototype.slice.call(scope.querySelectorAll('.diary-content pre > code')).forEach(function (code) {
+      var pre = code.parentNode;
+      if (!pre || pre.getAttribute('data-ato-code-ready') === 'true') return;
+      pre.setAttribute('data-ato-code-ready', 'true');
+
+      var source = code.textContent;
+      var explicit = languageFromClass(code);
+      var normalized = aliases[explicit] || explicit;
+      var detected = normalized;
+
+      try {
+        if (normalized && window.hljs.getLanguage(normalized)) {
+          if (!code.classList.contains('language-' + normalized)) code.classList.add('language-' + normalized);
+          window.hljs.highlightElement(code);
+        } else {
+          var result = window.hljs.highlightAuto(source);
+          code.innerHTML = result.value;
+          code.classList.add('hljs');
+          code.setAttribute('data-highlighted', 'yes');
+          detected = result.language || 'plaintext';
+        }
+      } catch (error) {
+        code.classList.add('hljs');
+        detected = normalized || 'plaintext';
+      }
+
+      if (code.result && code.result.language) detected = code.result.language;
+      var languageLabel = displayLanguage(detected);
+      var wrapper = document.createElement('div');
+      var toolbar = document.createElement('div');
+      var title = document.createElement('span');
+      var copyButton = document.createElement('button');
+
+      wrapper.className = 'code-paper';
+      toolbar.className = 'code-paper-toolbar';
+      title.className = 'code-language';
+      title.textContent = languageLabel;
+      copyButton.className = 'code-copy';
+      copyButton.type = 'button';
+      copyButton.textContent = '复制';
+      copyButton.setAttribute('aria-label', '复制 ' + languageLabel + ' 代码');
+
+      pre.parentNode.insertBefore(wrapper, pre);
+      toolbar.appendChild(title);
+      toolbar.appendChild(copyButton);
+      wrapper.appendChild(toolbar);
+      wrapper.appendChild(pre);
+
+      var resetTimer = null;
+      copyButton.addEventListener('click', function () {
+        copyText(source).then(function () {
+          copyButton.textContent = '已复制';
+          copyButton.classList.add('is-copied');
+          window.clearTimeout(resetTimer);
+          resetTimer = window.setTimeout(function () {
+            copyButton.textContent = '复制';
+            copyButton.classList.remove('is-copied');
+          }, 1600);
+        }).catch(function () {
+          copyButton.textContent = '复制失败';
+        });
+      });
+    });
+  }
+
   function initArticleToc(scope) {
     if (tocCleanup) {
       tocCleanup();
@@ -423,8 +587,10 @@
     window.TypechoComment = commentController;
     initLikeButton(scope);
     initCommentSecurity(scope);
+    initCommentQQ(scope);
     initCommentEmotes(scope);
     initHitokoto(scope);
+    initCodeBlocks(scope);
     initArticleToc(scope);
     dispatch('ato:page-ready', { main: scope, url: window.location.href });
   }

@@ -23,6 +23,7 @@
     </footer>
 </div>
 
+<script src="<?php $this->options->themeUrl('assets/vendor/highlight.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('assets/js/main.js'); ?>"></script>
 <?php $this->footer(); ?>
 </body>

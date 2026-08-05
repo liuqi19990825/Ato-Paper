@@ -100,6 +100,36 @@ function themeConfig($form)
     );
     $form->addInput($aboutPageUrl);
 
+    $friendPageIntro = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'friendPageIntro',
+        null,
+        '沿着这些小小的书签，去看看朋友们正在记录的生活。',
+        _t('友链页面介绍'),
+        _t('显示在“友链页面”标题下方，建议写一到两句话。')
+    );
+    $form->addInput($friendPageIntro);
+
+    $friendLinks = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'friendLinks',
+        null,
+        null,
+        _t('友链列表'),
+        _t('每行一个站点，格式为：名称|网址|头像网址|一句介绍。头像和介绍可留空。')
+    );
+    $form->addInput($friendLinks);
+
+    $commentContactMode = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'commentContactMode',
+        [
+            'qq' => _t('使用 QQ 号，并显示 QQ 头像'),
+            'email' => _t('使用 Email 与 Gravatar')
+        ],
+        'qq',
+        _t('评论联系方式'),
+        _t('QQ 模式会把号码转换为“QQ号@qq.com”交给 Typecho 保存，并通过腾讯 QQ 头像地址显示头像；已有邮箱评论不受影响。')
+    );
+    $form->addInput($commentContactMode);
+
     $defaultNow = "2026-08-05|博客|给这个小世界重新铺一层纸|整理歌单，补几篇拖了很久的文章，也在认真把博客装修得更舒服一点。\n"
         . "2026-07-29|正在听|最近总在循环一些有雨声的歌|安静的鼓点和稍远一点的人声，很适合七月底闷热的夜晚。\n"
         . "2026-07-21|游戏|慢慢体验姬子·启行|没有急着追进度，一边体验剧情和机甲演出，一边记下机制与手感。\n"
@@ -339,6 +369,83 @@ function ato_now_items($raw)
 }
 
 /**
+ * 解析“名称|网址|头像|介绍”格式的友链数据。
+ */
+function ato_friend_links($raw)
+{
+    $items = [];
+    $lines = preg_split('/\r\n|\r|\n/', trim((string) $raw));
+
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '') {
+            continue;
+        }
+
+        $parts = array_pad(array_map('trim', explode('|', $line, 4)), 4, '');
+        if ($parts[0] === '' || !preg_match('/^https?:\/\//i', $parts[1]) || !filter_var($parts[1], FILTER_VALIDATE_URL)) {
+            continue;
+        }
+
+        $avatar = $parts[2];
+        if ($avatar !== '' && (!preg_match('/^https?:\/\//i', $avatar) || !filter_var($avatar, FILTER_VALIDATE_URL))) {
+            $avatar = '';
+        }
+
+        $items[] = [
+            'name' => $parts[0],
+            'url' => $parts[1],
+            'avatar' => $avatar,
+            'description' => $parts[3] !== '' ? $parts[3] : '去这个小小的网络角落看看。',
+        ];
+    }
+
+    return $items;
+}
+
+/**
+ * 返回站点名称中适合作为头像占位符的第一个字符。
+ */
+function ato_friend_initial($name)
+{
+    $name = trim((string) $name);
+    if ($name === '') {
+        return '✦';
+    }
+
+    return function_exists('mb_substr') ? mb_substr($name, 0, 1, 'UTF-8') : substr($name, 0, 1);
+}
+
+/**
+ * 从 Typecho 保存的 QQ 邮箱格式中还原 QQ 号。
+ */
+function ato_comment_qq($mail)
+{
+    if (preg_match('/^([1-9][0-9]{4,11})@qq\.com$/i', trim((string) $mail), $matches)) {
+        return $matches[1];
+    }
+
+    return '';
+}
+
+/**
+ * QQ 邮箱评论使用 QQ 头像，其余评论继续使用 Typecho Gravatar。
+ */
+function ato_comment_avatar($comments, $size = 42)
+{
+    $qq = ato_comment_qq((string) $comments->mail);
+    if ($qq === '') {
+        $comments->gravatar($size, null, true);
+        return;
+    }
+
+    $avatarUrl = 'https://q2.qlogo.cn/headimg_dl?dst_uin=' . rawurlencode($qq) . '&spec=100';
+    ?>
+    <img class="avatar avatar-qq" src="<?php ato_e($avatarUrl); ?>" width="<?php echo (int) $size; ?>" height="<?php echo (int) $size; ?>" loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="<?php ato_e((string) $comments->author); ?>的 QQ 头像">
+    <?php
+}
+
+/**
  * 评论列表单项。
  */
 function threadedComments($comments, $options)
@@ -348,7 +455,7 @@ function threadedComments($comments, $options)
     <li id="li-<?php $comments->theId(); ?>" class="comment-item<?php echo $commentClass; ?>">
         <article id="<?php $comments->theId(); ?>" class="comment-card">
             <header>
-                <?php $comments->gravatar(42, null, true); ?>
+                <?php ato_comment_avatar($comments, 42); ?>
                 <div>
                     <strong><?php $comments->author(); ?></strong>
                     <a href="<?php $comments->permalink(); ?>"><time><?php $comments->date('Y.m.d'); ?> · <?php $comments->date('H:i'); ?></time></a>

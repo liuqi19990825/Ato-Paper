@@ -1,6 +1,6 @@
 # Ato Paper
 
-一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.4.0。
+一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.5.0。
 
 ## 当前功能
 
@@ -22,6 +22,9 @@
 - 文章目录中的长标题会自然换行，不再出现横向滚动条
 - 原创纸张樱花 favicon，并提供 ICO、32px PNG 与 Apple Touch Icon
 - 评论框支持颜文字、贴吧泡泡和 Bilibili 三类表情，兼容 PJAX 与键盘操作
+- 独立友链页面使用书签式纸卡，可在后台逐行维护站点信息
+- 评论联系方式可切换为 QQ 号，并为 QQ 邮箱评论显示 QQ 头像
+- 文章代码块支持本地语法高亮、自动语言识别与一键复制
 
 ## 安装
 
@@ -41,6 +44,18 @@
 ```
 
 请把最新一条放在最上方，首页便签会自动读取它。
+
+## 创建友链页面
+
+1. 在后台新建独立页面，标题填写“友链”或“朋友们”，缩略名建议填写 `links`。
+2. 展开高级选项，将自定义模板选为“友链页面”。
+3. 在“设置外观 → 友链列表”中维护站点；每行一条，格式如下：
+
+```text
+站点名称|https://example.com/|https://example.com/avatar.png|一句简短的介绍
+```
+
+头像网址和介绍可以留空。友链页面正文会显示为卡片下方的“交换友链”纸条，可用来写申请格式、本站信息或其他说明。独立页面发布后会和其他 Typecho 页面一样自动出现在页头导航中。
 
 ## 文章题图
 
@@ -65,6 +80,20 @@
 
 表情标记会以纯文本保存在 Typecho 数据库中，不需要开放任意评论 HTML；停用主题后原始评论文字仍然可以读取。Bilibili 动态表情默认静止，鼠标悬停或键盘聚焦时才播放，以减少页面负担。
 
+## QQ 评论头像
+
+“设置外观 → 评论联系方式”可以在 QQ 与 Email 两种模式间切换，默认使用 QQ：
+
+- 访客填写 QQ 号后，主题会在提交前转换为 `QQ号@qq.com`，以通过 Typecho 原生邮箱校验
+- 显示评论时，主题只识别合法的 QQ 邮箱格式，并从腾讯 QQ 头像地址加载头像
+- 普通邮箱评论仍使用 Typecho 原生 Gravatar，旧评论和嵌套回复不需要迁移
+
+QQ 号不会显示在页面上，但会以对应 QQ 邮箱形式保存在评论数据中；头像加载会向腾讯的头像服务发起请求。如果不希望使用这一方式，可切换回 Email 模式。
+
+## 代码高亮
+
+Markdown 代码围栏可以显式写语言，例如 ```` ```php ````；没有写语言时，主题会自动识别。代码块使用 Ato Paper 自己的暖纸张样式，并在右上角提供复制按钮。Highlight.js 已打包在主题内，不依赖外部 CDN，也兼容 PJAX 切页。
+
 ## PJAX 页面加载
 
 PJAX 默认开启，可以在“设置外观 → PJAX 无刷新加载”中随时关闭。站内普通链接会使用纸张过渡；评论提交、搜索、下载、站外链接和 Typecho 后台地址仍使用标准跳转。加载失败时主题会自动退回完整页面刷新。
@@ -73,9 +102,11 @@ PJAX 默认开启，可以在“设置外观 → PJAX 无刷新加载”中随�
 
 ## 资源来源与致谢
 
-评论区的颜文字清单、贴吧泡泡表情与 Bilibili 表情资源取自 [mashirozx/Sakura](https://github.com/mashirozx/Sakura) `3.x` 分支，基于提交 `9a7a597ac18219bf4202b76c150bec6c16664b7c` 整理并改写为 Typecho 本地表情选择器。感谢 Mashiro 与 Sakura 项目贡献者带来的灵感与资源。
+评论区的颜文字清单、贴吧泡泡表情与 Bilibili 表情资源取自 [mashirozx/Sakura](https://github.com/mashirozx/Sakura) `3.x` 分支，基于提交 `9a7a597ac18219bf4202b76c150bec6c16664b7c` 整理并改写为 Typecho 本地表情选择器。QQ 号转邮箱及 QQ 头像的实现思路也参考了 Sakura，再针对 Typecho 的评论校验与数据结构重新实现。感谢 Mashiro 与 Sakura 项目贡献者带来的灵感与资源。
 
-相关资源随主题本地提供，不依赖 Sakura 或 jsDelivr 在线服务。Sakura 项目使用 GNU GPL v2；完整许可副本见 `licenses/Sakura-GPL-2.0.txt`，文件清单和修改说明见 `THIRD_PARTY_NOTICES.md`。
+代码语法高亮使用 [Highlight.js](https://github.com/highlightjs/highlight.js) 11.11.1 的本地浏览器构建版。Highlight.js 使用 BSD 3-Clause License，许可副本见 `licenses/highlight.js-BSD-3-Clause.txt`。
+
+相关前端资源均随主题本地提供，不依赖 Sakura、Highlight.js CDN 或 jsDelivr 在线服务。Sakura 项目使用 GNU GPL v2；完整许可副本见 `licenses/Sakura-GPL-2.0.txt`，文件清单和修改说明见 `THIRD_PARTY_NOTICES.md`。
 
 ## 兼容性
 
