@@ -113,7 +113,7 @@ img { display: block; max-width: 100%; height: auto; }
 .diary-slip:hover { transform: rotate(.15deg) translateY(-2px); }
 .diary-slip::before { content: ""; position: absolute; width: 74px; height: 18px; left: 42%; top: -10px; background: rgba(204, 179, 132, .38); transform: rotate(1.5deg); }
 .diary-slip > span { color: var(--accent); font: 600 9px/1 var(--sans); letter-spacing: .1em; }
-.diary-slip blockquote, .diary-slip blockquote p { margin: 16px 0; font-size: 17px; line-height: 1.8; }
+.diary-slip blockquote, .diary-slip blockquote p { margin: 16px 0; font-size: 17px; line-height: 1.8; white-space: pre-line; }
 .diary-slip b { font: 600 10px/1 var(--sans); }
 .blog-sidebar { position: sticky; top: 105px; }
 .now-note { display: block; position: relative; margin: 8px 0 48px; padding: 28px 22px 22px; background: #e9e4d5; color: #36332e; transform: rotate(1.2deg); box-shadow: 0 9px 24px rgba(69, 53, 37, .08); }

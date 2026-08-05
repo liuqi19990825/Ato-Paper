@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.1.1
+ * @version 0.1.2
  * @link https://atowo.work/
  */
 
@@ -47,7 +47,7 @@ $entryIndex = 0;
             </header>
 
             <?php if ($this->have()): ?>
-                <?php while ($this->next()): $entryIndex++; ?>
+                <?php while ($this->next()): $entryIndex++; $manualSnippet = trim((string) $this->fields->homeSnippet); ?>
                     <article class="post-entry<?php echo $entryIndex === 1 ? ' post-entry-first' : ''; ?>" itemscope itemtype="https://schema.org/BlogPosting">
                         <div class="post-entry-meta">
                             <time datetime="<?php $this->date('c'); ?>" itemprop="datePublished"><?php $this->date('Y 年 m 月 d 日'); ?></time>
@@ -60,7 +60,7 @@ $entryIndex = 0;
                         <?php if ($entryIndex === 1): ?>
                             <a href="<?php $this->permalink(); ?>" class="diary-slip" aria-label="阅读：<?php $this->title(); ?>">
                                 <span>今天的片段</span>
-                                <blockquote><?php $this->excerpt(62, '…'); ?></blockquote>
+                                <blockquote><?php if ($manualSnippet !== ''): ?><?php ato_e($manualSnippet); ?><?php else: ?><?php $this->excerpt(62, '…'); ?><?php endif; ?></blockquote>
                                 <b>继续读下去 →</b>
                             </a>
                         <?php endif; ?>

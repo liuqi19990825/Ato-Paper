@@ -129,6 +129,15 @@ function themeConfig($form)
  */
 function themeFields($layout)
 {
+    $homeSnippet = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'homeSnippet',
+        null,
+        null,
+        _t('首页“今天的片段”'),
+        _t('可选。填写后优先显示这段文字；留空则自动截取正文前 62 个字符。')
+    );
+    $layout->addItem($homeSnippet);
+
     $subtitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'subtitle',
         null,
