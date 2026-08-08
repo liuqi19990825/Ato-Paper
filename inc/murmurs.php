@@ -35,6 +35,80 @@ function ato_is_murmur_post($post, $options)
 }
 
 /**
+ * 返回碎碎念分类下的文章 ID，并在单次请求内复用查询结果。
+ */
+function ato_murmur_post_ids($categoryId)
+{
+    $categoryId = max(0, (int) $categoryId);
+    if ($categoryId < 1) {
+        return [];
+    }
+
+    static $cache = [];
+    if (array_key_exists($categoryId, $cache)) {
+        return $cache[$categoryId];
+    }
+
+    $db = \Typecho\Db::get();
+    $relationships = $db->fetchAll(
+        $db->select('table.relationships.cid')
+            ->from('table.relationships')
+            ->where('table.relationships.mid = ?', $categoryId)
+    );
+    $postIds = [];
+    foreach ($relationships as $relationship) {
+        $cid = isset($relationship['cid']) ? (int) $relationship['cid'] : 0;
+        if ($cid > 0) {
+            $postIds[] = $cid;
+        }
+    }
+
+    $cache[$categoryId] = array_values(array_unique($postIds));
+    return $cache[$categoryId];
+}
+
+/**
+ * 输出普通文章之间的上一篇/下一篇链接，跳过碎碎念分类。
+ */
+function ato_post_neighbor_link($post, $direction, $format, $default, array $custom = [])
+{
+    $direction = $direction === 'next' ? 'next' : 'prev';
+    if (!$post) {
+        echo $default;
+        return;
+    }
+
+    $query = $post->select();
+    if ($direction === 'next') {
+        $query->where(
+            'table.contents.created > ? AND table.contents.created < ?',
+            $post->created,
+            $post->options->time
+        )->order('table.contents.created', \Typecho\Db::SORT_ASC);
+    } else {
+        $query->where('table.contents.created < ?', $post->created)
+            ->order('table.contents.created', \Typecho\Db::SORT_DESC);
+    }
+
+    $query->where('table.contents.status = ?', 'publish')
+        ->where('table.contents.type = ?', $post->type)
+        ->where("table.contents.password IS NULL OR table.contents.password = ''");
+
+    $categoryId = ato_murmur_category_id($post->options);
+    $murmurPostIds = ato_murmur_post_ids($categoryId);
+    if (!empty($murmurPostIds)) {
+        $query->where('table.contents.cid NOT IN ?', $murmurPostIds);
+    }
+    $query->limit(1);
+
+    $content = \Widget\Contents\From::allocWithAlias(
+        'ato-neighbor-' . $direction . ':' . (int) $post->cid . ':' . $categoryId,
+        ['query' => $query]
+    );
+    $post->theLink($content, $format, $default, $custom);
+}
+
+/**
  * 查询指定分类中的文章，或从普通文章流中排除该分类。
  *
  * 碎碎念仍然是 Typecho 原生文章，因此可以继续使用 Markdown、附件、评论与插件；
@@ -60,27 +134,7 @@ class AtoPaperMurmurPosts extends \Widget\Base\Contents
         $this->currentPageNumber = max(1, (int) $this->parameter->currentPage);
         $this->pageSizeNumber = max(1, min(50, (int) $this->parameter->pageSize));
 
-        static $relatedIdCache = [];
-        $relatedIds = [];
-        if ($categoryId > 0) {
-            if (array_key_exists($categoryId, $relatedIdCache)) {
-                $relatedIds = $relatedIdCache[$categoryId];
-            } else {
-                $relationships = $this->db->fetchAll(
-                    $this->db->select('table.relationships.cid')
-                        ->from('table.relationships')
-                        ->where('table.relationships.mid = ?', $categoryId)
-                );
-                foreach ($relationships as $relationship) {
-                    $cid = isset($relationship['cid']) ? (int) $relationship['cid'] : 0;
-                    if ($cid > 0) {
-                        $relatedIds[] = $cid;
-                    }
-                }
-                $relatedIds = array_values(array_unique($relatedIds));
-                $relatedIdCache[$categoryId] = $relatedIds;
-            }
-        }
+        $relatedIds = ato_murmur_post_ids($categoryId);
 
         $select = $this->select('table.contents.*');
         if ($this->user->hasLogin()) {

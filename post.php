@@ -39,8 +39,8 @@ $this->need('header.php');
         </article>
 
         <nav class="simple-next" aria-label="文章导航">
-            <div><small>上一篇</small><span><?php $this->thePrev('%s', '没有更早的文章了'); ?></span></div>
-            <div class="next-link"><small>下一篇</small><span><?php $this->theNext('%s', '没有更新的文章了'); ?></span></div>
+            <div><small>上一篇</small><span><?php ato_post_neighbor_link($this, 'prev', '%s', '没有更早的文章了'); ?></span></div>
+            <div class="next-link"><small>下一篇</small><span><?php ato_post_neighbor_link($this, 'next', '%s', '没有更新的文章了'); ?></span></div>
         </nav>
 
         <?php $this->need('comments.php'); ?>
