@@ -12,6 +12,7 @@
   var pjaxProgress = document.getElementById('pjax-progress');
   var pjaxAnnouncer = document.getElementById('pjax-announcer');
   var tocCleanup = null;
+  var galleryLightbox = null;
   var pjaxEnabled = root.getAttribute('data-ato-pjax') === 'true'
     && typeof window.fetch === 'function'
     && typeof window.DOMParser === 'function'
@@ -489,6 +490,77 @@
     });
   }
 
+  function looksLikeImageUrl(value) {
+    var source = String(value || '').trim();
+    if (/^data:image\//i.test(source)) return true;
+    try {
+      return /\.(?:avif|bmp|gif|jpe?g|png|svg|webp)$/i.test(new URL(source, document.baseURI).pathname);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function initArticleGallery(scope) {
+    if (galleryLightbox && typeof galleryLightbox.destroy === 'function') {
+      galleryLightbox.destroy();
+      galleryLightbox = null;
+    }
+    if (!window.GLightbox) return;
+
+    var images = Array.prototype.slice.call(scope.querySelectorAll('.diary-content img'));
+    var triggers = [];
+
+    images.forEach(function (image) {
+      if (image.closest('[data-no-lightbox]')) return;
+
+      var source = image.currentSrc || image.getAttribute('src') || '';
+      if (!source) return;
+      if (!image.hasAttribute('loading')) image.setAttribute('loading', 'lazy');
+      if (!image.hasAttribute('decoding')) image.setAttribute('decoding', 'async');
+
+      var anchor = image.parentElement && image.parentElement.tagName === 'A' ? image.parentElement : null;
+      if (anchor
+        && !looksLikeImageUrl(anchor.getAttribute('href'))
+        && !anchor.hasAttribute('data-gallery')
+        && !anchor.classList.contains('ato-lightbox')) return;
+
+      if (!anchor) {
+        anchor = document.createElement('a');
+        anchor.href = source;
+        image.parentNode.insertBefore(anchor, image);
+        anchor.appendChild(image);
+      }
+
+      anchor.classList.add('ato-lightbox');
+      anchor.setAttribute('data-gallery', 'ato-article');
+      anchor.setAttribute('data-ato-gallery-ready', 'true');
+      image.classList.add('ato-gallery-image');
+
+      var caption = String(image.getAttribute('alt') || '').trim();
+      if (caption) anchor.setAttribute('data-title', caption);
+      else anchor.removeAttribute('data-title');
+      if (!anchor.hasAttribute('aria-label')) {
+        anchor.setAttribute('aria-label', caption ? '查看大图：' + caption : '查看大图');
+      }
+      triggers.push(anchor);
+    });
+
+    if (!triggers.length) return;
+    galleryLightbox = window.GLightbox({
+      selector: '.ato-lightbox',
+      touchNavigation: true,
+      keyboardNavigation: true,
+      loop: false,
+      zoomable: true,
+      draggable: true,
+      closeButton: true,
+      moreLength: 0,
+      openEffect: 'fade',
+      closeEffect: 'fade',
+      slideEffect: 'slide'
+    });
+  }
+
   function initCodeBlocks(scope) {
     if (!window.hljs) return;
 
@@ -692,6 +764,7 @@
     initAvatarFallbacks(scope);
     initCommentEmotes(scope);
     initHitokoto(scope);
+    initArticleGallery(scope);
     initCodeBlocks(scope);
     initArticleToc(scope);
     dispatch('ato:page-ready', { main: scope, url: window.location.href });

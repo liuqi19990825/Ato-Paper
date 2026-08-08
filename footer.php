@@ -24,6 +24,7 @@
 </div>
 
 <script src="<?php $this->options->themeUrl('assets/vendor/highlight.min.js?v=11.11.1'); ?>"></script>
+<script src="<?php $this->options->themeUrl('assets/vendor/glightbox.min.js?v=3.3.1'); ?>"></script>
 <script src="<?php $this->options->themeUrl('assets/js/main.js?v=' . rawurlencode(ato_theme_version())); ?>"></script>
 <?php $this->footer(); ?>
 </body>

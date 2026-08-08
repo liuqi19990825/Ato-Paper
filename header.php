@@ -37,6 +37,7 @@ $atoPjaxEnabled = ato_option($this->options, 'enablePjax', '1') !== '0';
     <link rel="preload" href="<?php $this->options->themeUrl('assets/fonts/noto-serif-sc/H4chBXePl9DZ0Xe7gG9cyOj7kqGWbg.woff2'); ?>" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?php $this->options->themeUrl('assets/fonts/noto-sans-sc/k3kXo84MPvpLmixcA63oeALRLoKI.woff2'); ?>" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('assets/fonts/fonts.css?v=' . rawurlencode(ato_theme_version())); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('assets/vendor/glightbox.min.css?v=3.3.1'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css?v=' . rawurlencode(ato_theme_version())); ?>">
     <?php $this->header(); ?>
 </head>

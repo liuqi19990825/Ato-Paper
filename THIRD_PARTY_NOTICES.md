@@ -37,6 +37,22 @@ Bundled file:
 
 Ato Paper uses the upstream browser build for syntax parsing and automatic language detection. The paper-style toolbar, token palette, copy interaction and PJAX initialization are original theme code.
 
+## GLightbox
+
+- Project: GLightbox
+- Author: Biati Digital and GLightbox contributors
+- Source: https://github.com/biati-digital/glightbox
+- Version: `3.3.1`
+- License: MIT License
+- License copy: `licenses/GLightbox-MIT.txt`
+
+Bundled files:
+
+- `assets/vendor/glightbox.min.css`
+- `assets/vendor/glightbox.min.js`
+
+Ato Paper uses the unmodified upstream distribution files for image viewing, touch and keyboard navigation, and zooming. Automatic Markdown image grouping, PJAX lifecycle integration, captions, accessibility labels and the paper-style presentation are original theme code.
+
 ## Noto Serif SC and Noto Sans SC
 
 - Project: Google Fonts / Noto CJK
