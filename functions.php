@@ -11,7 +11,7 @@ require_once __DIR__ . '/inc/murmurs.php';
  */
 function ato_theme_version()
 {
-    return '0.9.2';
+    return '0.10.0';
 }
 
 /**
@@ -367,6 +367,27 @@ function themeConfig($form)
     );
     $form->addInput($enablePjax);
 
+    $enableCopyAttribution = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'enableCopyAttribution',
+        [
+            '1' => _t('开启'),
+            '0' => _t('关闭')
+        ],
+        '0',
+        _t('复制正文时追加出处'),
+        _t('开启后，从文章或普通独立页面正文复制文字时，会在剪贴板末尾追加作者、原文链接、来源与转载协议；代码块复制不受影响。')
+    );
+    $form->addInput($enableCopyAttribution);
+
+    $copyAttributionLicense = new \Typecho\Widget\Helper\Form\Element\Text(
+        'copyAttributionLicense',
+        null,
+        '署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)',
+        _t('复制出处协议'),
+        _t('显示在剪贴板追加声明的“协议（License）”一行。')
+    );
+    $form->addInput($copyAttributionLicense);
+
     $footerCredit = new \Typecho\Widget\Helper\Form\Element\Text(
         'footerCredit',
         null,
@@ -456,6 +477,37 @@ function ato_option($options, $name, $default = '')
 function ato_e($value)
 {
     echo htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * 为正文输出可选的剪贴板署名信息。
+ */
+function ato_copy_attribution_attributes($widget)
+{
+    if (ato_option($widget->options, 'enableCopyAttribution', '0') !== '1') {
+        return;
+    }
+
+    $author = trim((string) $widget->author->screenName);
+    if ($author === '') {
+        $author = ato_option($widget->options, 'title');
+    }
+
+    $attributes = [
+        'data-copy-attribution' => 'true',
+        'data-copy-author' => $author,
+        'data-copy-url' => (string) $widget->permalink,
+        'data-copy-source' => ato_option($widget->options, 'title'),
+        'data-copy-license' => ato_option(
+            $widget->options,
+            'copyAttributionLicense',
+            '署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)'
+        ),
+    ];
+
+    foreach ($attributes as $name => $value) {
+        echo ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '"';
+    }
 }
 
 /**

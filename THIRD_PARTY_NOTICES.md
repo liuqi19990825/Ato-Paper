@@ -19,6 +19,8 @@ The image files are redistributed locally without visual modification. Ato Paper
 
 Sakura's QQ comment flow was also consulted as an implementation reference. Ato Paper independently implements the Typecho-specific conversion from a QQ number to a synthetic QQ email and uses the QQ avatar endpoint when rendering matching comments; no Sakura PHP or JavaScript code is copied for this feature.
 
+The optional copy-attribution behavior was inspired by the presentation documented on Sakura's theme page at https://2heng.xin/theme-sakura/#toc-head-14. Ato Paper uses an original JavaScript implementation, its own Typecho data attributes and the current site's author and source information; no Sakura clipboard code is copied.
+
 Thank you to Mashiro and every Sakura contributor for making these resources available.
 
 ## Highlight.js

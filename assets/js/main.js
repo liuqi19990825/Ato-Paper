@@ -13,6 +13,7 @@
   var pjaxAnnouncer = document.getElementById('pjax-announcer');
   var tocCleanup = null;
   var galleryLightbox = null;
+  var copyAttributionReady = false;
   var pjaxEnabled = root.getAttribute('data-ato-pjax') === 'true'
     && typeof window.fetch === 'function'
     && typeof window.DOMParser === 'function'
@@ -500,6 +501,56 @@
     }
   }
 
+  function initCopyAttribution() {
+    if (copyAttributionReady) return;
+    copyAttributionReady = true;
+
+    document.addEventListener('copy', function (event) {
+      var selection = window.getSelection ? window.getSelection() : null;
+      if (!selection || selection.isCollapsed || !selection.rangeCount || !event.clipboardData) return;
+
+      var range = selection.getRangeAt(0);
+      var commonNode = range.commonAncestorContainer;
+      var commonElement = commonNode.nodeType === 1 ? commonNode : commonNode.parentElement;
+      var content = commonElement ? commonElement.closest('.diary-content[data-copy-attribution="true"]') : null;
+      if (!content || !content.contains(range.startContainer) || !content.contains(range.endContainer)) return;
+
+      var startElement = range.startContainer.nodeType === 1 ? range.startContainer : range.startContainer.parentElement;
+      var endElement = range.endContainer.nodeType === 1 ? range.endContainer : range.endContainer.parentElement;
+      var codeBlock = startElement ? startElement.closest('pre, .code-paper') : null;
+      if (codeBlock && endElement && codeBlock.contains(endElement)) return;
+
+      var selectedText = selection.toString();
+      if (!selectedText.trim()) return;
+
+      var lines = [
+        '# 商业转载请联系作者获得授权，非商业转载请注明出处。',
+        '# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.',
+        '# 协议(License)：' + (content.getAttribute('data-copy-license') || ''),
+        '# 作者(Author)：' + (content.getAttribute('data-copy-author') || ''),
+        '# 链接(URL)：' + (content.getAttribute('data-copy-url') || window.location.href),
+        '# 来源(Source)：' + (content.getAttribute('data-copy-source') || document.title)
+      ];
+      var plainText = selectedText.replace(/\s+$/, '') + '\n\n' + lines.join('\n');
+
+      var html = document.createElement('div');
+      html.appendChild(range.cloneContents());
+      var attribution = document.createElement('p');
+      attribution.setAttribute('data-ato-copy-attribution', 'true');
+      lines.forEach(function (line, index) {
+        if (index > 0) attribution.appendChild(document.createElement('br'));
+        attribution.appendChild(document.createTextNode(line));
+      });
+      html.appendChild(attribution);
+
+      try {
+        event.clipboardData.setData('text/plain', plainText);
+        event.clipboardData.setData('text/html', html.innerHTML);
+        event.preventDefault();
+      } catch (error) {}
+    });
+  }
+
   function initArticleGallery(scope) {
     if (galleryLightbox && typeof galleryLightbox.destroy === 'function') {
       galleryLightbox.destroy();
@@ -764,6 +815,7 @@
     initAvatarFallbacks(scope);
     initCommentEmotes(scope);
     initHitokoto(scope);
+    initCopyAttribution();
     initArticleGallery(scope);
     initCodeBlocks(scope);
     initArticleToc(scope);

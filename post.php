@@ -29,7 +29,7 @@ $this->need('header.php');
                 </figure>
             <?php endif; ?>
 
-            <div class="diary-content<?php echo $dropCap ? ' has-drop-cap' : ''; ?>" itemprop="articleBody"><?php $this->content(); ?></div>
+            <div class="diary-content<?php echo $dropCap ? ' has-drop-cap' : ''; ?>" itemprop="articleBody"<?php ato_copy_attribution_attributes($this); ?>><?php $this->content(); ?></div>
 
             <footer class="diary-footer">
                 <div class="tags"><span>标签：</span><?php $this->tags('', true, '<span>暂时没有标签</span>'); ?></div>

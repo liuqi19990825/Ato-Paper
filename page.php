@@ -35,7 +35,7 @@ $this->need('header.php');
                 <?php endif; ?>
                 <h1><?php $this->title(); ?></h1>
             </header>
-            <div class="diary-content<?php echo $dropCap ? ' has-drop-cap' : ''; ?>"><?php $this->content(); ?></div>
+            <div class="diary-content<?php echo $dropCap ? ' has-drop-cap' : ''; ?>"<?php ato_copy_attribution_attributes($this); ?>><?php $this->content(); ?></div>
 
             <?php if (!empty($pageChildren)): ?>
                 <nav class="page-children" aria-label="<?php ato_e($pageNode ? $pageNode['title'] : '当前页面'); ?>的子页面">
