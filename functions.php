@@ -11,7 +11,7 @@ require_once __DIR__ . '/inc/murmurs.php';
  */
 function ato_theme_version()
 {
-    return '0.10.0';
+    return '0.10.1';
 }
 
 /**
@@ -269,7 +269,7 @@ function themeConfig($form)
     $murmurCategory = new \Typecho\Widget\Helper\Form\Element\Select(
         'murmurCategory',
         $categoryOptions,
-        '0',
+        '1',
         _t('碎碎念分类'),
         _t('把日常短句作为普通文章发布到这个分类。首页文章流会排除该分类，“最近在做”和碎碎念独立页则从这里读取。')
     );
@@ -367,8 +367,8 @@ function themeConfig($form)
     );
     $form->addInput($enablePjax);
 
-    $enableCopyAttribution = new \Typecho\Widget\Helper\Form\Element\Radio(
-        'enableCopyAttribution',
+    $copyAttributionEnabled = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'copyAttributionEnabled',
         [
             '1' => _t('开启'),
             '0' => _t('关闭')
@@ -377,7 +377,7 @@ function themeConfig($form)
         _t('复制正文时追加出处'),
         _t('开启后，从文章或普通独立页面正文复制文字时，会在剪贴板末尾追加作者、原文链接、来源与转载协议；代码块复制不受影响。')
     );
-    $form->addInput($enableCopyAttribution);
+    $form->addInput($copyAttributionEnabled);
 
     $copyAttributionLicense = new \Typecho\Widget\Helper\Form\Element\Text(
         'copyAttributionLicense',
@@ -484,9 +484,7 @@ function ato_e($value)
  */
 function ato_copy_attribution_attributes($widget)
 {
-    if (ato_option($widget->options, 'enableCopyAttribution', '0') !== '1') {
-        return;
-    }
+    $enabled = ato_option($widget->options, 'copyAttributionEnabled', '1') !== '0';
 
     $author = trim((string) $widget->author->screenName);
     if ($author === '') {
@@ -494,7 +492,7 @@ function ato_copy_attribution_attributes($widget)
     }
 
     $attributes = [
-        'data-copy-attribution' => 'true',
+        'data-copy-attribution' => $enabled ? 'true' : 'false',
         'data-copy-author' => $author,
         'data-copy-url' => (string) $widget->permalink,
         'data-copy-source' => ato_option($widget->options, 'title'),
