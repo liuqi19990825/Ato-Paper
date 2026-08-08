@@ -1,10 +1,11 @@
 # Ato Paper
 
-一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.10.2。
+一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.10.3。
 
 ## 当前功能
 
 - 纸张质感首页与阅读型文章页
+- 主题根目录附带经过压缩的首页预览图，Typecho 外观管理页可直接显示主题截图
 - 自托管 Noto Serif SC 与 Noto Sans SC 可变字体，统一 Windows、macOS、Android 与 iOS 的主要排版
 - 深色模式与本地偏好记忆
 - 分类、标签、作者和搜索归档
