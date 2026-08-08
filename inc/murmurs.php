@@ -78,12 +78,13 @@ function ato_post_neighbor_link($post, $direction, $format, $default, array $cus
         return;
     }
 
+    $options = \Widget\Options::alloc();
     $query = $post->select();
     if ($direction === 'next') {
         $query->where(
             'table.contents.created > ? AND table.contents.created < ?',
             $post->created,
-            $post->options->time
+            $options->time
         )->order('table.contents.created', \Typecho\Db::SORT_ASC);
     } else {
         $query->where('table.contents.created < ?', $post->created)
@@ -94,7 +95,7 @@ function ato_post_neighbor_link($post, $direction, $format, $default, array $cus
         ->where('table.contents.type = ?', $post->type)
         ->where("table.contents.password IS NULL OR table.contents.password = ''");
 
-    $categoryId = ato_murmur_category_id($post->options);
+    $categoryId = ato_murmur_category_id($options);
     $murmurPostIds = ato_murmur_post_ids($categoryId);
     if (!empty($murmurPostIds)) {
         $query->where('table.contents.cid NOT IN ?', $murmurPostIds);
