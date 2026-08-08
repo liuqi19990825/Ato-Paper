@@ -10,7 +10,7 @@ require_once __DIR__ . '/inc/emotes.php';
  */
 function ato_theme_version()
 {
-    return '0.6.0';
+    return '0.6.1';
 }
 
 /**
@@ -262,7 +262,7 @@ function themeConfig($form)
 }
 
 /**
- * 文章高级选项：可选副标题与题图。
+ * 文章与独立页高级选项。
  */
 function themeFields($layout)
 {
@@ -308,8 +308,8 @@ function themeFields($layout)
             '1' => _t('显示右侧章节目录')
         ],
         '0',
-        _t('文章章节目录'),
-        _t('默认关闭。开启后会读取正文中的二级、三级标题，并在宽屏文章右侧生成目录。')
+        _t('章节目录'),
+        _t('默认关闭。文章与普通独立页均可手动开启；开启后会读取正文中的二级、三级标题，并在宽屏右侧生成目录。')
     );
     $layout->addItem($showToc);
 
@@ -321,7 +321,7 @@ function themeFields($layout)
         ],
         '0',
         _t('正文首字放大'),
-        _t('默认关闭。只对当前文章正文的第一个段落生效。')
+        _t('默认关闭。文章与普通独立页均可手动开启；只对当前正文的第一个段落生效。')
     );
     $layout->addItem($dropCap);
 }
