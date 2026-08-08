@@ -463,9 +463,8 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
   .mobile-menu nav a.parent-current { color: var(--accent); }
   .mobile-nav-group { display: flex; flex-direction: column; }
   .mobile-subpages { margin: 0 7px 6px 10px; display: flex; flex-direction: column; }
-  .mobile-subpages a { position: relative; min-height: 34px; padding: 7px 10px 7px 22px; color: var(--muted); font-size: 12px; line-height: 1.5; }
-  .mobile-subpages a::before { content: ""; position: absolute; top: 50%; left: 5px; width: 8px; height: 7px; border-bottom: 2px solid var(--line); border-left: 2px solid var(--line); border-radius: 0 0 0 2px; transform: translateY(-72%); transition: border-color .18s ease, transform .18s ease; }
-  .mobile-subpages a:hover::before, .mobile-subpages a:focus-visible::before, .mobile-subpages a.current::before { border-color: var(--accent); transform: translateY(-72%) scale(1.06); }
+  .mobile-subpages a { position: relative; min-height: 34px; padding: 7px 10px 7px 30px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+  .mobile-subpages a::before { content: ""; position: absolute; top: 50%; left: 5px; width: 8px; height: 7px; border-bottom: 2px solid var(--line); border-left: 2px solid var(--line); border-radius: 0 0 0 2px; transform: translateY(-72%); }
   .mobile-subpages a.current { color: var(--accent); background: var(--paper-deep); font-weight: 600; }
   .blog-main { padding-block: 55px 85px; }
   .hello { display: flex; flex-direction: column; align-items: flex-start; gap: 45px; margin-bottom: 80px; }
