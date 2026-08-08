@@ -10,7 +10,7 @@ require_once __DIR__ . '/inc/emotes.php';
  */
 function ato_theme_version()
 {
-    return '0.6.3';
+    return '0.6.4';
 }
 
 /**

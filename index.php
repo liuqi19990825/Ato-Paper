@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.6.3
+ * @version 0.6.4
  * @link https://atowo.work/
  */
 
