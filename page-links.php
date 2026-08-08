@@ -26,8 +26,8 @@ $this->need('header.php');
 
     <?php if (!empty($friendLinks)): ?>
         <section class="friend-grid" aria-label="友情链接">
-            <?php foreach ($friendLinks as $index => $friend): ?>
-                <a class="friend-card" href="<?php ato_e($friend['url']); ?>" target="_blank" rel="friend noopener" style="--friend-index: <?php echo (int) $index; ?>">
+            <?php foreach ($friendLinks as $friend): ?>
+                <a class="friend-card" href="<?php ato_e($friend['url']); ?>" target="_blank" rel="friend noopener noreferrer">
                     <span class="friend-card-tape" aria-hidden="true"></span>
                     <span class="friend-avatar">
                         <?php if ($friend['avatar'] !== ''): ?>

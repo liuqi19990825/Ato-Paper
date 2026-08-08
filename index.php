@@ -4,17 +4,19 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.10.5
+ * @version 1.0.0
  * @link https://atowo.work/
  */
 
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $this->need('header.php');
 
-$heroImage = ato_option($this->options, 'heroImage');
+$heroImage = ato_http_url(ato_option($this->options, 'heroImage'));
 $heroSoft = ato_option($this->options, 'heroSoft', '如果其中某一篇刚好让你停下来读了一会儿，那就很好。');
 $heroSoftSource = ato_option($this->options, 'heroSoftSource', 'manual');
 $aboutPageUrl = ato_site_url($this->options, ato_option($this->options, 'aboutPageUrl', 'about-me.html'));
+$bilibiliUrl = ato_http_url(ato_option($this->options, 'bilibiliUrl'));
+$githubUrl = ato_http_url(ato_option($this->options, 'githubUrl'));
 $legacyMoments = ato_now_items(ato_option($this->options, 'nowItems'));
 $murmurCategoryId = ato_murmur_category_id($this->options);
 $latestMoment = ato_latest_murmur($this->options);
@@ -55,7 +57,7 @@ $entryIndex = 0;
     <section class="hello" aria-labelledby="hello-title">
         <div class="hello-copy">
             <span class="little-mark">你好呀 👋</span>
-            <h1 id="hello-title"><?php ato_e(ato_option($this->options, 'heroTitle', '这里是 Ato 的小世界。')); ?></h1>
+            <h1 id="hello-title"><?php ato_e(ato_option($this->options, 'heroTitle', '这里是我的小世界。')); ?></h1>
             <p><?php ato_e(ato_option($this->options, 'heroIntro')); ?></p>
             <?php if ($heroSoftSource === 'hitokoto'): ?>
                 <p class="hello-soft" data-hitokoto aria-live="polite">
@@ -70,7 +72,7 @@ $entryIndex = 0;
             <?php if ($heroImage !== ''): ?>
                 <img src="<?php ato_e($heroImage); ?>" alt="首页插图" decoding="async">
             <?php else: ?>
-                <img src="<?php $this->options->themeUrl('assets/images/hero.png'); ?>" width="1024" height="1536" alt="戴着耳机坐在桌前阅读手稿的插画" decoding="async" fetchpriority="high">
+                <img src="<?php $this->options->themeUrl('assets/images/hero.webp'); ?>" width="1024" height="1536" alt="戴着耳机坐在桌前阅读手稿的插画" decoding="async" fetchpriority="high">
             <?php endif; ?>
             <figcaption><?php ato_e(ato_option($this->options, 'heroCaption', '想象中的书桌一角 · 2026 夏')); ?></figcaption>
         </figure>
@@ -153,8 +155,8 @@ $entryIndex = 0;
                     <p><?php $this->options->description(); ?></p>
                 </a>
                 <div class="side-links">
-                    <?php if (ato_option($this->options, 'bilibiliUrl') !== ''): ?><a href="<?php ato_e(ato_option($this->options, 'bilibiliUrl')); ?>" target="_blank" rel="noreferrer">Bilibili</a><?php endif; ?>
-                    <?php if (ato_option($this->options, 'githubUrl') !== ''): ?><a href="<?php ato_e(ato_option($this->options, 'githubUrl')); ?>" target="_blank" rel="noreferrer">GitHub</a><?php endif; ?>
+                    <?php if ($bilibiliUrl !== ''): ?><a href="<?php ato_e($bilibiliUrl); ?>" target="_blank" rel="noopener noreferrer">Bilibili</a><?php endif; ?>
+                    <?php if ($githubUrl !== ''): ?><a href="<?php ato_e($githubUrl); ?>" target="_blank" rel="noopener noreferrer">GitHub</a><?php endif; ?>
                     <a href="<?php $this->options->feedUrl(); ?>">RSS</a>
                     <a href="<?php $this->options->adminUrl(); ?>" data-no-pjax>进入后台</a>
                 </div>

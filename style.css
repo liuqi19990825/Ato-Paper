@@ -622,7 +622,7 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .hljs-strong { font-weight: 700; }
 
 /* QQ comment contact */
-.comment-contact-field small, .comment-qq-field small { margin-top: -2px; color: var(--muted); font: 500 10px/1.55 var(--sans); transition: color .18s ease; }
+.comment-contact-field small { margin-top: -2px; color: var(--muted); font: 500 10px/1.55 var(--sans); transition: color .18s ease; }
 .comment-contact-field.is-qq input { border-color: color-mix(in srgb, var(--accent) 58%, var(--line)); }
 .comment-contact-field.is-qq small { color: var(--accent); }
 .comment-contact-field.is-email input { border-color: color-mix(in srgb, var(--green) 66%, var(--line)); }

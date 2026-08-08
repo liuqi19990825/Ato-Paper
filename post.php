@@ -2,6 +2,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $showToc = trim((string) $this->fields->showToc) === '1';
 $dropCap = trim((string) $this->fields->dropCap) === '1';
+$cover = ato_http_url((string) $this->fields->cover);
 $hideMurmurTitle = ato_is_murmur_post($this, $this->options)
     && !ato_murmur_has_visible_title($this->title);
 $this->need('header.php');
@@ -22,9 +23,9 @@ $this->need('header.php');
                 <?php if (trim((string) $this->fields->subtitle) !== ''): ?><p><?php ato_e($this->fields->subtitle); ?></p><?php endif; ?>
             </header>
 
-            <?php if (trim((string) $this->fields->cover) !== ''): ?>
+            <?php if ($cover !== ''): ?>
                 <figure class="diary-photo">
-                    <img src="<?php ato_e($this->fields->cover); ?>" alt="<?php if ($hideMurmurTitle): ?>碎碎念题图<?php else: ?><?php $this->title(); ?>的题图<?php endif; ?>">
+                    <img src="<?php ato_e($cover); ?>" alt="<?php if ($hideMurmurTitle): ?>碎碎念题图<?php else: ?><?php $this->title(); ?>的题图<?php endif; ?>">
                     <?php if (trim((string) $this->fields->coverCaption) !== ''): ?><figcaption><?php ato_e($this->fields->coverCaption); ?></figcaption><?php endif; ?>
                 </figure>
             <?php endif; ?>

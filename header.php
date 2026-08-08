@@ -65,7 +65,7 @@ $atoCurrentPageId = $this->is('page') ? (int) $this->cid : 0;
                     $hasChildren = !empty($navPage['children']);
                     $submenuId = 'nav-children-' . $navPage['cid'];
                     ?>
-                    <div class="desktop-nav-item<?php echo $hasChildren ? ' has-children' : ''; ?>" data-nav-item>
+                    <div class="desktop-nav-item<?php echo $hasChildren ? ' has-children' : ''; ?>">
                         <a<?php if ($isCurrentPage): ?> class="current" aria-current="page"<?php elseif ($isCurrentParent): ?> class="parent-current"<?php endif; ?> href="<?php ato_e($navPage['url']); ?>"><?php ato_e($navPage['title']); ?></a>
                         <?php if ($hasChildren): ?>
                             <button class="desktop-submenu-toggle" type="button" aria-expanded="false" aria-controls="<?php ato_e($submenuId); ?>" aria-label="展开<?php ato_e($navPage['title']); ?>的子页面">

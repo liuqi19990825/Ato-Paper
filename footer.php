@@ -2,7 +2,10 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $icpNumber = ato_option($this->options, 'icpNumber');
 $policeNumber = ato_option($this->options, 'policeNumber');
-$policeUrl = ato_option($this->options, 'policeUrl', 'https://beian.mps.gov.cn/#/query/webSearch');
+$policeUrl = ato_http_url(
+    ato_option($this->options, 'policeUrl', 'https://beian.mps.gov.cn/#/query/webSearch'),
+    'https://beian.mps.gov.cn/#/query/webSearch'
+);
 ?>
     <footer class="site-footer">
         <div class="wrap footer-main">
@@ -18,12 +21,12 @@ $policeUrl = ato_option($this->options, 'policeUrl', 'https://beian.mps.gov.cn/#
                 <?php if ($icpNumber !== '' || $policeNumber !== ''): ?>
                     <div class="filing-links">
                         <?php if ($icpNumber !== ''): ?>
-                            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+                            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
                                 <i aria-hidden="true"></i><?php ato_e($icpNumber); ?>
                             </a>
                         <?php endif; ?>
                         <?php if ($policeNumber !== ''): ?>
-                            <a href="<?php ato_e($policeUrl); ?>" target="_blank" rel="noreferrer">
+                            <a href="<?php ato_e($policeUrl); ?>" target="_blank" rel="noopener noreferrer">
                                 <i aria-hidden="true"></i><?php ato_e($policeNumber); ?>
                             </a>
                         <?php endif; ?>

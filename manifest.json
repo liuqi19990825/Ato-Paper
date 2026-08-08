@@ -1,7 +1,7 @@
 {
   "id": "../../../",
-  "name": "Ato 的小世界",
-  "short_name": "Ato 的小世界",
+  "name": "Ato Paper",
+  "short_name": "Ato Paper",
   "description": "记录生活、分享日常与碎碎念的纸张风博客。",
   "lang": "zh-CN",
   "start_url": "../../../",
@@ -20,13 +20,7 @@
       "src": "assets/icons/pwa-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icons/pwa-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }

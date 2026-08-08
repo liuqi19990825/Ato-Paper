@@ -588,7 +588,6 @@
 
       anchor.classList.add('ato-lightbox');
       anchor.setAttribute('data-gallery', 'ato-article');
-      anchor.setAttribute('data-ato-gallery-ready', 'true');
       image.classList.add('ato-gallery-image');
 
       var caption = String(image.getAttribute('alt') || '').trim();
@@ -678,17 +677,22 @@
       var explicit = languageFromClass(code);
       var normalized = aliases[explicit] || explicit;
       var detected = normalized;
+      var canHighlight = source.length <= 50000;
+      var canAutoDetect = source.length <= 20000;
 
       try {
-        if (normalized && window.hljs.getLanguage(normalized)) {
+        if (canHighlight && normalized && window.hljs.getLanguage(normalized)) {
           if (!code.classList.contains('language-' + normalized)) code.classList.add('language-' + normalized);
           window.hljs.highlightElement(code);
-        } else {
+        } else if (canAutoDetect) {
           var result = window.hljs.highlightAuto(source);
           code.innerHTML = result.value;
           code.classList.add('hljs');
           code.setAttribute('data-highlighted', 'yes');
           detected = result.language || 'plaintext';
+        } else {
+          code.classList.add('hljs');
+          detected = normalized || 'plaintext';
         }
       } catch (error) {
         code.classList.add('hljs');

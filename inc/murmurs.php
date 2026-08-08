@@ -60,20 +60,26 @@ class AtoPaperMurmurPosts extends \Widget\Base\Contents
         $this->currentPageNumber = max(1, (int) $this->parameter->currentPage);
         $this->pageSizeNumber = max(1, min(50, (int) $this->parameter->pageSize));
 
+        static $relatedIdCache = [];
         $relatedIds = [];
         if ($categoryId > 0) {
-            $relationships = $this->db->fetchAll(
-                $this->db->select('table.relationships.cid')
-                    ->from('table.relationships')
-                    ->where('table.relationships.mid = ?', $categoryId)
-            );
-            foreach ($relationships as $relationship) {
-                $cid = isset($relationship['cid']) ? (int) $relationship['cid'] : 0;
-                if ($cid > 0) {
-                    $relatedIds[] = $cid;
+            if (array_key_exists($categoryId, $relatedIdCache)) {
+                $relatedIds = $relatedIdCache[$categoryId];
+            } else {
+                $relationships = $this->db->fetchAll(
+                    $this->db->select('table.relationships.cid')
+                        ->from('table.relationships')
+                        ->where('table.relationships.mid = ?', $categoryId)
+                );
+                foreach ($relationships as $relationship) {
+                    $cid = isset($relationship['cid']) ? (int) $relationship['cid'] : 0;
+                    if ($cid > 0) {
+                        $relatedIds[] = $cid;
+                    }
                 }
+                $relatedIds = array_values(array_unique($relatedIds));
+                $relatedIdCache[$categoryId] = $relatedIds;
             }
-            $relatedIds = array_values(array_unique($relatedIds));
         }
 
         $select = $this->select('table.contents.*');

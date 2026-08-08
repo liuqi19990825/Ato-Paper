@@ -11,7 +11,7 @@ require_once __DIR__ . '/inc/murmurs.php';
  */
 function ato_theme_version()
 {
-    return '0.10.5';
+    return '1.0.0';
 }
 
 /**
@@ -112,7 +112,7 @@ function themeConfig($form)
     $heroTitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'heroTitle',
         null,
-        '这里是 Ato 的小世界。',
+        '这里是我的小世界。',
         _t('首页大标题'),
         _t('首页第一屏显示的大标题。')
     );
@@ -269,7 +269,7 @@ function themeConfig($form)
     $murmurCategory = new \Typecho\Widget\Helper\Form\Element\Select(
         'murmurCategory',
         $categoryOptions,
-        '1',
+        '0',
         _t('碎碎念分类'),
         _t('把日常短句作为普通文章发布到这个分类。首页文章流会排除该分类，“最近在做”和碎碎念独立页则从这里读取。')
     );
@@ -284,14 +284,10 @@ function themeConfig($form)
     );
     $form->addInput($murmurPageSize);
 
-    $defaultNow = "2026-08-05|博客|给这个小世界重新铺一层纸|整理歌单，补几篇拖了很久的文章，也在认真把博客装修得更舒服一点。\n"
-        . "2026-07-29|正在听|最近总在循环一些有雨声的歌|安静的鼓点和稍远一点的人声，很适合七月底闷热的夜晚。\n"
-        . "2026-07-21|游戏|慢慢体验姬子·启行|没有急着追进度，一边体验剧情和机甲演出，一边记下机制与手感。\n"
-        . "2026-07-12|日常|把桌面清出了一小块空地|收起暂时用不到的线材，也给常用的耳机留了一个固定位置。";
     $nowItems = new \Typecho\Widget\Helper\Form\Element\Textarea(
         'nowItems',
         null,
-        $defaultNow,
+        null,
         _t('旧版碎碎念数据（兼容）'),
         _t('仅在没有选择“碎碎念分类”时使用。每行一条：日期|标签|标题|正文，最新内容放在最上面。')
     );
@@ -493,7 +489,7 @@ function ato_e($value)
  */
 function ato_copy_attribution_attributes($widget)
 {
-    $enabled = ato_option($widget->options, 'copyAttributionEnabled', '1') !== '0';
+    $enabled = ato_option($widget->options, 'copyAttributionEnabled', '0') !== '0';
     $minLength = max(0, (int) ato_option($widget->options, 'copyAttributionMinLength', '80'));
 
     $author = trim((string) $widget->author->screenName);
@@ -544,10 +540,23 @@ function ato_site_url($options, $path)
 {
     $path = trim((string) $path);
     if (preg_match('/^https?:\/\//i', $path)) {
-        return $path;
+        return ato_http_url($path, (string) $options->siteUrl);
     }
 
     return \Typecho\Common::url(ltrim($path, '/'), $options->siteUrl);
+}
+
+/**
+ * 仅接受可公开访问的 HTTP(S) 地址，避免设置项进入危险协议。
+ */
+function ato_http_url($value, $default = '')
+{
+    $value = trim((string) $value);
+    if (preg_match('/^https?:\/\//i', $value) && filter_var($value, FILTER_VALIDATE_URL)) {
+        return $value;
+    }
+
+    return (string) $default;
 }
 
 /**
