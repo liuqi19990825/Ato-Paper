@@ -4,6 +4,37 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 }
 
 /**
+ * Typecho 会把留空的文章标题保存为“未命名文档”。
+ * 在碎碎念纸条中将它视为未设置，避免展示系统占位文字。
+ */
+function ato_murmur_has_visible_title($title)
+{
+    $title = trim((string) $title);
+    $untitled = trim((string) _t('未命名文档'));
+
+    return $title !== '' && $title !== $untitled && $title !== '未命名文档';
+}
+
+/**
+ * 判断当前文章是否属于主题设置中选定的碎碎念分类。
+ */
+function ato_is_murmur_post($post, $options)
+{
+    $categoryId = ato_murmur_category_id($options);
+    if ($categoryId < 1 || !$post) {
+        return false;
+    }
+
+    foreach ((array) $post->categories as $category) {
+        if (isset($category['mid']) && (int) $category['mid'] === $categoryId) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * 查询指定分类中的文章，或从普通文章流中排除该分类。
  *
  * 碎碎念仍然是 Typecho 原生文章，因此可以继续使用 Markdown、附件、评论与插件；

@@ -2,6 +2,8 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $showToc = trim((string) $this->fields->showToc) === '1';
 $dropCap = trim((string) $this->fields->dropCap) === '1';
+$hideMurmurTitle = ato_is_murmur_post($this, $this->options)
+    && !ato_murmur_has_visible_title($this->title);
 $this->need('header.php');
 ?>
 
@@ -16,13 +18,13 @@ $this->need('header.php');
                     <span>·</span>
                     <span><?php $this->category('、'); ?></span>
                 </div>
-                <h1 itemprop="headline"><?php $this->title(); ?></h1>
+                <?php if (!$hideMurmurTitle): ?><h1 itemprop="headline"><?php $this->title(); ?></h1><?php endif; ?>
                 <?php if (trim((string) $this->fields->subtitle) !== ''): ?><p><?php ato_e($this->fields->subtitle); ?></p><?php endif; ?>
             </header>
 
             <?php if (trim((string) $this->fields->cover) !== ''): ?>
                 <figure class="diary-photo">
-                    <img src="<?php ato_e($this->fields->cover); ?>" alt="<?php $this->title(); ?>的题图">
+                    <img src="<?php ato_e($this->fields->cover); ?>" alt="<?php if ($hideMurmurTitle): ?>碎碎念题图<?php else: ?><?php $this->title(); ?>的题图<?php endif; ?>">
                     <?php if (trim((string) $this->fields->coverCaption) !== ''): ?><figcaption><?php ato_e($this->fields->coverCaption); ?></figcaption><?php endif; ?>
                 </figure>
             <?php endif; ?>

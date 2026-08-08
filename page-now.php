@@ -54,14 +54,17 @@ $this->need('header.php');
     <section class="moment-timeline" aria-label="碎碎念列表">
         <?php if ($murmurCategoryId > 0 && $murmurPosts && $murmurPosts->have()): ?>
             <?php while ($murmurPosts->next()): ?>
+                <?php $hasMurmurTitle = ato_murmur_has_visible_title($murmurPosts->title); ?>
                 <article class="moment-entry murmur-entry<?php echo $murmurPosts->getCurrentPageNumber() === 1 && $murmurPosts->sequence === 1 ? ' is-current' : ''; ?>">
                     <time class="moment-date" datetime="<?php $murmurPosts->date('c'); ?>">
                         <strong><?php $murmurPosts->date('m.d'); ?></strong><span><?php $murmurPosts->date('Y'); ?></span>
                     </time>
                     <span class="moment-dot" aria-hidden="true"></span>
-                    <div class="moment-paper">
+                    <div class="moment-paper<?php echo $hasMurmurTitle ? '' : ' has-no-title'; ?>">
                         <span class="moment-tag">碎碎念</span>
-                        <h2><a href="<?php $murmurPosts->permalink(); ?>"><?php $murmurPosts->title(); ?></a></h2>
+                        <?php if ($hasMurmurTitle): ?>
+                            <h2><a href="<?php $murmurPosts->permalink(); ?>"><?php $murmurPosts->title(); ?></a></h2>
+                        <?php endif; ?>
                         <div class="moment-body"><?php $murmurPosts->content(); ?></div>
                         <footer class="moment-foot">
                             <a href="<?php $murmurPosts->permalink(); ?>">单独打开这张纸条 →</a>
@@ -77,14 +80,15 @@ $this->need('header.php');
             </article>
         <?php elseif (!empty($legacyMoments)): ?>
             <?php foreach ($legacyMoments as $index => $moment): ?>
+                <?php $hasMurmurTitle = ato_murmur_has_visible_title($moment['title']); ?>
                 <article class="moment-entry<?php echo $index === 0 ? ' is-current' : ''; ?>">
                     <time class="moment-date" datetime="<?php ato_e($moment['date']); ?>">
                         <strong><?php ato_e($moment['dateLabel']); ?></strong><span><?php ato_e($moment['year']); ?></span>
                     </time>
                     <span class="moment-dot" aria-hidden="true"></span>
-                    <div class="moment-paper">
+                    <div class="moment-paper<?php echo $hasMurmurTitle ? '' : ' has-no-title'; ?>">
                         <span class="moment-tag"><?php ato_e($moment['tag']); ?></span>
-                        <h2><?php ato_e($moment['title']); ?></h2>
+                        <?php if ($hasMurmurTitle): ?><h2><?php ato_e($moment['title']); ?></h2><?php endif; ?>
                         <p><?php ato_e($moment['body']); ?></p>
                     </div>
                 </article>

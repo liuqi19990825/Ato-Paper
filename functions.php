@@ -11,7 +11,7 @@ require_once __DIR__ . '/inc/murmurs.php';
  */
 function ato_theme_version()
 {
-    return '0.9.0';
+    return '0.9.1';
 }
 
 /**

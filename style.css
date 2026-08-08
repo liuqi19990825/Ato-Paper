@@ -402,6 +402,7 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .moment-paper h2 { margin: 12px 0; font-size: 20px; line-height: 1.55; font-weight: 600; }
 .moment-paper h2 a { background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-position: 0 100%; background-size: 0 1px; transition: color .2s ease, background-size .25s ease; }
 .moment-paper h2 a:hover { color: var(--accent); background-size: 100% 1px; }
+.moment-paper.has-no-title .moment-body, .moment-paper.has-no-title > p { margin-top: 14px; }
 .moment-paper p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.95; }
 .moment-body { min-width: 0; color: var(--muted); font-size: 14px; line-height: 1.95; overflow-wrap: anywhere; }
 .moment-body > :first-child { margin-top: 0; }
