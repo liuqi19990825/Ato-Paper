@@ -11,7 +11,7 @@ require_once __DIR__ . '/inc/murmurs.php';
  */
 function ato_theme_version()
 {
-    return '0.9.1';
+    return '0.9.2';
 }
 
 /**
@@ -318,7 +318,7 @@ function themeConfig($form)
         null,
         null,
         _t('ICP备案号'),
-        _t('例如：京ICP备12345678号。留空时显示待填写。')
+        _t('例如：京ICP备12345678号。留空时不显示。')
     );
     $form->addInput($icpNumber);
 
@@ -327,7 +327,7 @@ function themeConfig($form)
         null,
         null,
         _t('公安备案号'),
-        _t('例如：京公网安备 11000000000000号。')
+        _t('例如：京公网安备 11000000000000号。留空时不显示。')
     );
     $form->addInput($policeNumber);
 

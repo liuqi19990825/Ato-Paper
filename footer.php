@@ -1,4 +1,9 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+$icpNumber = ato_option($this->options, 'icpNumber');
+$policeNumber = ato_option($this->options, 'policeNumber');
+$policeUrl = ato_option($this->options, 'policeUrl', 'https://beian.mps.gov.cn/#/query/webSearch');
+?>
     <footer class="site-footer">
         <div class="wrap footer-main">
             <p><?php ato_e(ato_option($this->options, 'footerClosing', '谢谢你读到这里。')); ?></p>
@@ -10,14 +15,20 @@
         <div class="filing-strip">
             <div class="wrap filing-inner">
                 <span class="filing-label"><?php ato_e(ato_option($this->options, 'footerCredit', 'Ato Paper：骄傲的由Ato和Codex构建')); ?></span>
-                <div class="filing-links">
-                    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
-                        <i aria-hidden="true"></i><?php ato_e(ato_option($this->options, 'icpNumber', 'ICP备案号 · 待填写')); ?>
-                    </a>
-                    <a href="<?php ato_e(ato_option($this->options, 'policeUrl', 'https://beian.mps.gov.cn/#/query/webSearch')); ?>" target="_blank" rel="noreferrer">
-                        <i aria-hidden="true"></i><?php ato_e(ato_option($this->options, 'policeNumber', '公安备案号 · 待填写')); ?>
-                    </a>
-                </div>
+                <?php if ($icpNumber !== '' || $policeNumber !== ''): ?>
+                    <div class="filing-links">
+                        <?php if ($icpNumber !== ''): ?>
+                            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+                                <i aria-hidden="true"></i><?php ato_e($icpNumber); ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($policeNumber !== ''): ?>
+                            <a href="<?php ato_e($policeUrl); ?>" target="_blank" rel="noreferrer">
+                                <i aria-hidden="true"></i><?php ato_e($policeNumber); ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </footer>
