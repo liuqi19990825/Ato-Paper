@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.7.0
+ * @version 0.7.1
  * @link https://atowo.work/
  */
 
@@ -16,15 +16,27 @@ $heroSoft = ato_option($this->options, 'heroSoft', '如果其中某一篇刚好�
 $heroSoftSource = ato_option($this->options, 'heroSoftSource', 'manual');
 $aboutPageUrl = ato_site_url($this->options, ato_option($this->options, 'aboutPageUrl', 'about-me.html'));
 $legacyMoments = ato_now_items(ato_option($this->options, 'nowItems'));
+$murmurCategoryId = ato_murmur_category_id($this->options);
 $latestMoment = ato_latest_murmur($this->options);
 if ($latestMoment === null) {
-    $latestMoment = $legacyMoments[0] ?? [
-    'dateLabel' => date('m.d'),
-    'title' => '博客正在慢慢长大',
-    'body' => '最近在整理这个小世界，也给未来想写的东西留出一些位置。',
-    ];
+    if ($murmurCategoryId > 0) {
+        $latestMoment = [
+            'dateLabel' => '',
+            'title' => '等待第一条记录',
+            'body' => '碎碎念还没有写下第一句话，等想起什么时再慢慢添上。',
+            'statusLabel' => '等待第一条记录',
+        ];
+    } else {
+        $latestMoment = $legacyMoments[0] ?? [
+            'dateLabel' => date('m.d'),
+            'title' => '博客正在慢慢长大',
+            'body' => '最近在整理这个小世界，也给未来想写的东西留出一些位置。',
+        ];
+    }
 }
-$murmurCategoryId = ato_murmur_category_id($this->options);
+$latestMomentStatus = isset($latestMoment['statusLabel'])
+    ? $latestMoment['statusLabel']
+    : '更新于 ' . $latestMoment['dateLabel'];
 $isFilteredHome = $this->is('index') && $murmurCategoryId > 0;
 $stream = $this;
 $streamPageSize = max(1, (int) $this->options->postsListSize);
@@ -121,7 +133,7 @@ $entryIndex = 0;
                 <span class="tape" aria-hidden="true"></span>
                 <small>最近在做</small>
                 <p><?php ato_e($latestMoment['body']); ?></p>
-                <span class="now-note-foot"><time>更新于 <?php ato_e($latestMoment['dateLabel']); ?></time><b>查看碎碎念 →</b></span>
+                <span class="now-note-foot"><time><?php ato_e($latestMomentStatus); ?></time><b>查看碎碎念 →</b></span>
             </a>
 
             <section class="side-section" id="categories">
@@ -129,6 +141,7 @@ $entryIndex = 0;
                 <div class="category-list">
                     <?php \Widget\Metas\Category\Rows::alloc()->to($categories); ?>
                     <?php while ($categories->next()): ?>
+                        <?php if ($murmurCategoryId > 0 && (int) $categories->mid === $murmurCategoryId) continue; ?>
                         <a href="<?php $categories->permalink(); ?>"><?php $categories->name(); ?><span><?php echo str_pad((string) $categories->count, 2, '0', STR_PAD_LEFT); ?></span></a>
                     <?php endwhile; ?>
                 </div>
@@ -143,6 +156,7 @@ $entryIndex = 0;
                     <?php if (ato_option($this->options, 'bilibiliUrl') !== ''): ?><a href="<?php ato_e(ato_option($this->options, 'bilibiliUrl')); ?>" target="_blank" rel="noreferrer">Bilibili</a><?php endif; ?>
                     <?php if (ato_option($this->options, 'githubUrl') !== ''): ?><a href="<?php ato_e(ato_option($this->options, 'githubUrl')); ?>" target="_blank" rel="noreferrer">GitHub</a><?php endif; ?>
                     <a href="<?php $this->options->feedUrl(); ?>">RSS</a>
+                    <a href="<?php $this->options->adminUrl(); ?>" data-no-pjax>进入后台</a>
                 </div>
             </section>
         </aside>

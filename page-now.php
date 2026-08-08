@@ -22,7 +22,15 @@ if ($murmurCategoryId > 0) {
 }
 
 $legacyMoments = ato_now_items(ato_option($this->options, 'nowItems'));
-$lastUpdated = $latestMurmur['date'] ?? ($legacyMoments[0]['date'] ?? date('Y-m-d'));
+if ($murmurCategoryId > 0) {
+    $lastUpdatedLabel = $latestMurmur !== null
+        ? '最后更新于 ' . $latestMurmur['date']
+        : '等待第一条记录';
+} elseif (!empty($legacyMoments)) {
+    $lastUpdatedLabel = '最后更新于 ' . $legacyMoments[0]['date'];
+} else {
+    $lastUpdatedLabel = '还没有记录';
+}
 $pageIntro = trim((string) $this->content);
 $this->need('header.php');
 ?>
@@ -40,7 +48,7 @@ $this->need('header.php');
                 <p>一些还不够写成文章，却想顺手记下来的事情。没有严格的更新频率，想起什么，就往这里放一张小纸条。</p>
             <?php endif; ?>
         </div>
-        <div class="now-status"><i aria-hidden="true"></i>最后更新于 <?php ato_e($lastUpdated); ?></div>
+        <div class="now-status"><i aria-hidden="true"></i><?php ato_e($lastUpdatedLabel); ?></div>
     </header>
 
     <section class="moment-timeline" aria-label="碎碎念列表">
