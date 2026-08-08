@@ -10,7 +10,7 @@ require_once __DIR__ . '/inc/emotes.php';
  */
 function ato_theme_version()
 {
-    return '0.6.2';
+    return '0.6.3';
 }
 
 /**
@@ -24,8 +24,25 @@ function ato_page_tree()
     }
 
     $pages = \Widget\Contents\Page\Rows::alloc();
+    $resolvedRows = [];
+    $collectResolvedRows = function () use ($pages, &$resolvedRows) {
+        while ($pages->next()) {
+            $cid = (int) $pages->cid;
+            $resolvedRows[$cid] = [
+                'slug' => (string) $pages->slug,
+                'url' => (string) $pages->permalink,
+                'title' => (string) $pages->title,
+            ];
+        }
+    };
+    $collectResolvedRows();
+    if (empty($resolvedRows) && (int) $pages->length > 0) {
+        // 兼容页面组件此前已被其他模板或插件迭代到末尾的情况。
+        $collectResolvedRows();
+    }
+
     $visited = [];
-    $walk = function ($parentId, $depth = 0) use (&$walk, &$visited, $pages) {
+    $walk = function ($parentId, $depth = 0) use (&$walk, &$visited, $pages, &$resolvedRows) {
         if ($depth > 8) {
             return [];
         }
@@ -46,12 +63,13 @@ function ato_page_tree()
                 $descendantIds = array_merge($descendantIds, $child['descendantIds']);
             }
 
+            $resolved = isset($resolvedRows[$cid]) ? $resolvedRows[$cid] : [];
             $nodes[] = [
                 'cid' => $cid,
                 'parent' => isset($row['parent']) ? (int) $row['parent'] : 0,
-                'slug' => isset($row['slug']) ? (string) $row['slug'] : '',
-                'url' => isset($row['permalink']) ? (string) $row['permalink'] : '',
-                'title' => isset($row['title']) ? (string) $row['title'] : '',
+                'slug' => isset($resolved['slug']) ? $resolved['slug'] : (isset($row['slug']) ? (string) $row['slug'] : ''),
+                'url' => isset($resolved['url']) ? $resolved['url'] : '',
+                'title' => isset($resolved['title']) ? $resolved['title'] : (isset($row['title']) ? (string) $row['title'] : ''),
                 'children' => $children,
                 'descendantIds' => array_values(array_unique($descendantIds)),
             ];
