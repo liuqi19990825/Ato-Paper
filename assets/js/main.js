@@ -5,6 +5,7 @@
   var body = document.body;
   var themeButton = document.getElementById('theme-toggle');
   var themeLabel = themeButton ? themeButton.querySelector('.theme-label') : null;
+  var themeColor = document.getElementById('ato-theme-color');
   var searchButton = document.getElementById('search-open');
   var searchPanel = document.getElementById('search-panel');
   var searchInput = document.getElementById('search-input');
@@ -23,15 +24,17 @@
   }
 
   function updateThemeButton() {
-    if (!themeButton) return;
     var isDark = currentTheme() === 'dark';
-    themeButton.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-    themeButton.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
-    if (themeLabel) themeLabel.textContent = isDark ? '浅色' : '深色';
+    if (themeColor) themeColor.setAttribute('content', isDark ? '#201f1c' : '#f8f5ed');
+    if (themeButton) {
+      themeButton.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+      themeButton.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
+      if (themeLabel) themeLabel.textContent = isDark ? '浅色' : '深色';
+    }
   }
 
+  updateThemeButton();
   if (themeButton) {
-    updateThemeButton();
     themeButton.addEventListener('click', function () {
       var next = currentTheme() === 'dark' ? 'light' : 'dark';
       if (next === 'dark') root.setAttribute('data-theme', 'dark');

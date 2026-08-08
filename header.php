@@ -6,8 +6,13 @@ $atoPjaxEnabled = ato_option($this->options, 'enablePjax', '1') !== '0';
 <html lang="zh-CN" data-ato-pjax="<?php echo $atoPjaxEnabled ? 'true' : 'false'; ?>">
 <head>
     <meta charset="<?php $this->options->charset(); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="renderer" content="webkit">
+    <meta name="theme-color" id="ato-theme-color" content="#f8f5ed">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="application-name" content="<?php ato_e((string) $this->options->title); ?>">
     <title><?php $this->archiveTitle([
         'category' => _t('分类 %s'),
         'search' => _t('搜索 %s'),
@@ -20,9 +25,12 @@ $atoPjaxEnabled = ato_option($this->options, 'enablePjax', '1') !== '0';
                 var saved = localStorage.getItem('ato-paper-theme');
                 var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
                 if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+                var themeColor = document.getElementById('ato-theme-color');
+                if (themeColor) themeColor.setAttribute('content', dark ? '#201f1c' : '#f8f5ed');
             } catch (error) {}
         }());
     </script>
+    <link rel="manifest" href="<?php $this->options->themeUrl('manifest.json?v=' . rawurlencode(ato_theme_version())); ?>">
     <link rel="icon" href="<?php $this->options->themeUrl('assets/icons/favicon.ico'); ?>" sizes="any">
     <link rel="icon" type="image/png" href="<?php $this->options->themeUrl('assets/icons/favicon-32.png'); ?>" sizes="32x32">
     <link rel="apple-touch-icon" href="<?php $this->options->themeUrl('assets/icons/apple-touch-icon.png'); ?>" sizes="180x180">

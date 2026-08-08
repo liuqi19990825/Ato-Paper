@@ -1,0 +1,32 @@
+{
+  "id": "../../../",
+  "name": "Ato 的小世界",
+  "short_name": "Ato 的小世界",
+  "description": "记录生活、分享日常与碎碎念的纸张风博客。",
+  "lang": "zh-CN",
+  "start_url": "../../../",
+  "scope": "../../../",
+  "display": "standalone",
+  "background_color": "#f8f5ed",
+  "theme_color": "#f8f5ed",
+  "icons": [
+    {
+      "src": "assets/icons/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/pwa-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
