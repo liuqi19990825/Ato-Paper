@@ -11,7 +11,7 @@ require_once __DIR__ . '/inc/murmurs.php';
  */
 function ato_theme_version()
 {
-    return '0.10.1';
+    return '0.10.2';
 }
 
 /**
@@ -388,6 +388,15 @@ function themeConfig($form)
     );
     $form->addInput($copyAttributionLicense);
 
+    $copyAttributionMinLength = new \Typecho\Widget\Helper\Form\Element\Text(
+        'copyAttributionMinLength',
+        null,
+        '80',
+        _t('复制声明触发字数'),
+        _t('复制内容达到该可见字符数时才追加出处，默认 80；填写 0 表示任何长度都追加。空格、换行与零宽字符不计入。')
+    );
+    $form->addInput($copyAttributionMinLength);
+
     $footerCredit = new \Typecho\Widget\Helper\Form\Element\Text(
         'footerCredit',
         null,
@@ -485,6 +494,7 @@ function ato_e($value)
 function ato_copy_attribution_attributes($widget)
 {
     $enabled = ato_option($widget->options, 'copyAttributionEnabled', '1') !== '0';
+    $minLength = max(0, (int) ato_option($widget->options, 'copyAttributionMinLength', '80'));
 
     $author = trim((string) $widget->author->screenName);
     if ($author === '') {
@@ -501,6 +511,7 @@ function ato_copy_attribution_attributes($widget)
             'copyAttributionLicense',
             '署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)'
         ),
+        'data-copy-min-length' => (string) $minLength,
     ];
 
     foreach ($attributes as $name => $value) {

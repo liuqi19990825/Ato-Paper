@@ -522,6 +522,10 @@
 
       var selectedText = selection.toString();
       if (!selectedText.trim()) return;
+      var minLength = parseInt(content.getAttribute('data-copy-min-length') || '80', 10);
+      if (!Number.isFinite(minLength) || minLength < 0) minLength = 80;
+      var visibleText = selectedText.replace(/[\s\u200B-\u200D\uFEFF]/g, '');
+      if (minLength > 0 && Array.from(visibleText).length < minLength) return;
 
       var lines = [
         '# 商业转载请联系作者获得授权，非商业转载请注明出处。',
