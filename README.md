@@ -229,13 +229,19 @@ PJAX 默认开启，可以在“设置外观 → PJAX 无刷新加载”中随�
 
 从旧版本升级后，请先从手机卸载此前添加的博客图标，再使用 Chrome 重新安装，以免浏览器继续沿用旧的安装清单。上下系统栏最终样式仍可能受 Android 版本、手机厂商系统和手势导航设置影响。
 
+## 许可证
+
+Ato Paper 的原创代码与原创资源采用宽松的 [MIT License](LICENSE)，允许使用、修改、分发、再许可和商业使用，但必须保留版权与许可声明。
+
+发行包不是“全部文件统一 MIT”：`inc/emotes.php`、`assets/emotes/tieba/` 与 `assets/emotes/bilibili/` 包含或适配 Sakura 的 GPL v2-or-later 内容，继续遵循 GNU GPL v2 或更高版本；Highlight.js、GLightbox 与 Noto 字体也分别保留各自的许可证。重新分发完整主题时，请同时保留 `LICENSE`、`THIRD_PARTY_NOTICES.md` 与 `licenses/` 目录。完整边界见 `THIRD_PARTY_NOTICES.md`。
+
 ## 资源来源与致谢
 
 评论区的颜文字清单、贴吧泡泡表情与 Bilibili 表情资源取自 [mashirozx/Sakura](https://github.com/mashirozx/Sakura) `3.x` 分支，基于提交 `9a7a597ac18219bf4202b76c150bec6c16664b7c` 整理并改写为 Typecho 本地表情选择器。QQ 号转邮箱及 QQ 头像的实现思路也参考了 Sakura，再针对 Typecho 的评论校验与数据结构重新实现。感谢 Mashiro 与 Sakura 项目贡献者带来的灵感与资源。
 
 代码语法高亮使用 [Highlight.js](https://github.com/highlightjs/highlight.js) 11.11.1 的本地浏览器构建版。Highlight.js 使用 BSD 3-Clause License，许可副本见 `licenses/highlight.js-BSD-3-Clause.txt`。
 
-相关前端资源均随主题本地提供，不依赖 Sakura、Highlight.js CDN 或 jsDelivr 在线服务。Sakura 项目使用 GNU GPL v2；完整许可副本见 `licenses/Sakura-GPL-2.0.txt`，文件清单和修改说明见 `THIRD_PARTY_NOTICES.md`。
+相关前端资源均随主题本地提供，不依赖 Sakura、Highlight.js CDN 或 jsDelivr 在线服务。Sakura 项目使用 GNU GPL v2 或更高版本；GPL v2 许可副本见 `licenses/Sakura-GPL-2.0.txt`，文件清单和修改说明见 `THIRD_PARTY_NOTICES.md`。
 
 ## 兼容性
 

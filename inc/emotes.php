@@ -1,4 +1,10 @@
 <?php
+/**
+ * Sakura-compatible comment emote data and renderer integration.
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ * See THIRD_PARTY_NOTICES.md and licenses/Sakura-GPL-2.0.txt.
+ */
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }

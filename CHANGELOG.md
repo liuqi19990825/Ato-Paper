@@ -14,3 +14,4 @@
 - 默认首页插图由 1.06 MB PNG 调整为约 294 KB WebP
 - 合并重复的 512px PWA 图标声明，并压缩安装图标与 favicon
 - 保留 Noto Serif SC / Noto Sans SC 官方字符分片、评论表情与本地第三方库，不以破坏功能为代价缩减资源
+- 原创代码与原创资源采用 MIT License，并为 Sakura 表情数据、图像及其他第三方组件明确保留各自的许可边界
