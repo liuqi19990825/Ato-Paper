@@ -10,7 +10,79 @@ require_once __DIR__ . '/inc/emotes.php';
  */
 function ato_theme_version()
 {
-    return '0.6.1';
+    return '0.6.2';
+}
+
+/**
+ * 读取 Typecho 独立页面树，供页头导航与页面上下文共用。
+ */
+function ato_page_tree()
+{
+    static $cache = null;
+    if ($cache !== null) {
+        return $cache;
+    }
+
+    $pages = \Widget\Contents\Page\Rows::alloc();
+    $visited = [];
+    $walk = function ($parentId, $depth = 0) use (&$walk, &$visited, $pages) {
+        if ($depth > 8) {
+            return [];
+        }
+
+        $nodes = [];
+        $rows = $pages->getRows($pages->getChildIds((int) $parentId));
+        foreach ($rows as $row) {
+            $cid = isset($row['cid']) ? (int) $row['cid'] : 0;
+            if ($cid < 1 || isset($visited[$cid])) {
+                continue;
+            }
+
+            $visited[$cid] = true;
+            $children = $walk($cid, $depth + 1);
+            $descendantIds = [];
+            foreach ($children as $child) {
+                $descendantIds[] = $child['cid'];
+                $descendantIds = array_merge($descendantIds, $child['descendantIds']);
+            }
+
+            $nodes[] = [
+                'cid' => $cid,
+                'parent' => isset($row['parent']) ? (int) $row['parent'] : 0,
+                'slug' => isset($row['slug']) ? (string) $row['slug'] : '',
+                'url' => isset($row['permalink']) ? (string) $row['permalink'] : '',
+                'title' => isset($row['title']) ? (string) $row['title'] : '',
+                'children' => $children,
+                'descendantIds' => array_values(array_unique($descendantIds)),
+            ];
+        }
+
+        return $nodes;
+    };
+
+    $roots = $walk(0);
+    $items = [];
+    $index = function ($nodes) use (&$index, &$items) {
+        foreach ($nodes as $node) {
+            $items[$node['cid']] = $node;
+            $index($node['children']);
+        }
+    };
+    $index($roots);
+
+    $cache = [
+        'roots' => $roots,
+        'items' => $items,
+    ];
+    return $cache;
+}
+
+/**
+ * 判断页面节点中是否包含指定的子页面。
+ */
+function ato_page_node_contains($node, $cid)
+{
+    return $cid > 0 && in_array((int) $cid, $node['descendantIds'], true);
 }
 
 /**

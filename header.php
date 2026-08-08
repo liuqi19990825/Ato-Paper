@@ -34,15 +34,9 @@ $atoPjaxEnabled = ato_option($this->options, 'enablePjax', '1') !== '0';
 </head>
 <body>
 <?php
-$atoNavPages = [];
-\Widget\Contents\Page\Rows::alloc()->to($navPages);
-while ($navPages->next()) {
-    $atoNavPages[] = [
-        'slug' => (string) $navPages->slug,
-        'url' => (string) $navPages->permalink,
-        'title' => (string) $navPages->title,
-    ];
-}
+$atoPageTree = ato_page_tree();
+$atoNavPages = $atoPageTree['roots'];
+$atoCurrentPageId = $this->is('page') ? (int) $this->cid : 0;
 ?>
 <div class="site-shell">
     <header class="site-header">
@@ -51,12 +45,34 @@ while ($navPages->next()) {
                 <strong><?php $this->options->title(); ?></strong><span class="brand-icon" aria-hidden="true"><?php ato_e(ato_brand_icon(ato_option($this->options, 'brandIcon', 'flower'))); ?></span>
             </a>
 
-            <nav class="desktop-nav" aria-label="主导航">
-                <a<?php if ($this->is('index')): ?> class="current"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>">首页</a>
-                <a href="<?php $this->options->siteUrl(); ?>#posts">文章</a>
-                <a href="<?php $this->options->siteUrl(); ?>#categories">分类</a>
+            <nav class="desktop-nav" data-site-nav aria-label="主导航">
+                <div class="desktop-nav-item">
+                    <a<?php if ($this->is('index')): ?> class="current" aria-current="page"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>">首页</a>
+                </div>
                 <?php foreach ($atoNavPages as $navPage): ?>
-                    <a<?php if ($this->is('page', $navPage['slug'])): ?> class="current"<?php endif; ?> href="<?php ato_e($navPage['url']); ?>"><?php ato_e($navPage['title']); ?></a>
+                    <?php
+                    $isCurrentPage = $atoCurrentPageId === $navPage['cid'];
+                    $isCurrentParent = !$isCurrentPage && ato_page_node_contains($navPage, $atoCurrentPageId);
+                    $hasChildren = !empty($navPage['children']);
+                    $submenuId = 'nav-children-' . $navPage['cid'];
+                    ?>
+                    <div class="desktop-nav-item<?php echo $hasChildren ? ' has-children' : ''; ?>" data-nav-item>
+                        <a<?php if ($isCurrentPage): ?> class="current" aria-current="page"<?php elseif ($isCurrentParent): ?> class="parent-current"<?php endif; ?> href="<?php ato_e($navPage['url']); ?>"><?php ato_e($navPage['title']); ?></a>
+                        <?php if ($hasChildren): ?>
+                            <button class="desktop-submenu-toggle" type="button" aria-expanded="false" aria-controls="<?php ato_e($submenuId); ?>" aria-label="展开<?php ato_e($navPage['title']); ?>的子页面">
+                                <span class="nav-chevron" aria-hidden="true"></span>
+                            </button>
+                            <div class="desktop-submenu" id="<?php ato_e($submenuId); ?>">
+                                <?php foreach ($navPage['children'] as $childPage): ?>
+                                    <?php
+                                    $isChildCurrent = $atoCurrentPageId === $childPage['cid'];
+                                    $isChildParent = !$isChildCurrent && ato_page_node_contains($childPage, $atoCurrentPageId);
+                                    ?>
+                                    <a<?php if ($isChildCurrent): ?> class="current" aria-current="page"<?php elseif ($isChildParent): ?> class="parent-current"<?php endif; ?> href="<?php ato_e($childPage['url']); ?>"><?php ato_e($childPage['title']); ?></a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
             </nav>
 
@@ -69,11 +85,28 @@ while ($navPages->next()) {
                 </button>
                 <details class="mobile-menu">
                     <summary aria-label="打开菜单"><span>菜单</span><span class="menu-glyph" aria-hidden="true"></span></summary>
-                    <nav>
-                        <a href="<?php $this->options->siteUrl(); ?>">首页</a>
-                        <a href="<?php $this->options->siteUrl(); ?>#posts">文章</a>
-                        <a href="<?php $this->options->siteUrl(); ?>#categories">分类</a>
-                        <?php foreach ($atoNavPages as $navPage): ?><a href="<?php ato_e($navPage['url']); ?>"><?php ato_e($navPage['title']); ?></a><?php endforeach; ?>
+                    <nav data-site-nav aria-label="手机端主导航">
+                        <a<?php if ($this->is('index')): ?> class="current" aria-current="page"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>">首页</a>
+                        <?php foreach ($atoNavPages as $navPage): ?>
+                            <?php
+                            $isCurrentPage = $atoCurrentPageId === $navPage['cid'];
+                            $isCurrentParent = !$isCurrentPage && ato_page_node_contains($navPage, $atoCurrentPageId);
+                            ?>
+                            <div class="mobile-nav-group<?php echo !empty($navPage['children']) ? ' has-children' : ''; ?>">
+                                <a<?php if ($isCurrentPage): ?> class="current" aria-current="page"<?php elseif ($isCurrentParent): ?> class="parent-current"<?php endif; ?> href="<?php ato_e($navPage['url']); ?>"><?php ato_e($navPage['title']); ?></a>
+                                <?php if (!empty($navPage['children'])): ?>
+                                    <div class="mobile-subpages">
+                                        <?php foreach ($navPage['children'] as $childPage): ?>
+                                            <?php
+                                            $isChildCurrent = $atoCurrentPageId === $childPage['cid'];
+                                            $isChildParent = !$isChildCurrent && ato_page_node_contains($childPage, $atoCurrentPageId);
+                                            ?>
+                                            <a<?php if ($isChildCurrent): ?> class="current" aria-current="page"<?php elseif ($isChildParent): ?> class="parent-current"<?php endif; ?> href="<?php ato_e($childPage['url']); ?>"><?php ato_e($childPage['title']); ?></a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
                     </nav>
                 </details>
             </div>

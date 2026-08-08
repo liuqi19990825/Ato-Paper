@@ -73,6 +73,54 @@
     });
   });
 
+  var desktopMenuItems = document.querySelectorAll('.desktop-nav-item.has-children');
+
+  function setDesktopSubmenu(item, open) {
+    if (!item) return;
+    var toggle = item.querySelector('.desktop-submenu-toggle');
+    item.classList.toggle('is-open', open);
+    if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function closeDesktopSubmenus(except) {
+    desktopMenuItems.forEach(function (item) {
+      if (item !== except) setDesktopSubmenu(item, false);
+    });
+  }
+
+  desktopMenuItems.forEach(function (item) {
+    var toggle = item.querySelector('.desktop-submenu-toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      var nextOpen = !item.classList.contains('is-open');
+      closeDesktopSubmenus(item);
+      setDesktopSubmenu(item, nextOpen);
+    });
+
+    item.addEventListener('mouseenter', function () { setDesktopSubmenu(item, true); });
+    item.addEventListener('mouseleave', function () {
+      if (!item.contains(document.activeElement)) setDesktopSubmenu(item, false);
+    });
+    item.addEventListener('focusin', function () { setDesktopSubmenu(item, true); });
+    item.addEventListener('focusout', function () {
+      window.setTimeout(function () {
+        if (!item.contains(document.activeElement)) setDesktopSubmenu(item, false);
+      }, 0);
+    });
+    item.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      setDesktopSubmenu(item, false);
+      toggle.focus();
+    });
+  });
+
+  document.addEventListener('click', function (event) {
+    var insideSubmenu = event.target.closest && event.target.closest('.desktop-nav-item.has-children');
+    if (!insideSubmenu) closeDesktopSubmenus(null);
+  });
+
   function dispatch(name, detail) {
     var event;
     try {
@@ -743,14 +791,32 @@
   }
 
   function syncNavigation(nextDocument) {
-    var currentLinks = document.querySelectorAll('.desktop-nav a');
-    var nextLinks = nextDocument.querySelectorAll('.desktop-nav a');
-    currentLinks.forEach(function (link, index) {
-      var current = nextLinks[index] && nextLinks[index].classList.contains('current');
-      link.classList.toggle('current', Boolean(current));
-      if (current) link.setAttribute('aria-current', 'page');
+    function navigationKey(link) {
+      try {
+        var url = new URL(link.getAttribute('href'), window.location.href);
+        return url.origin + url.pathname.replace(/\/$/, '') + url.search;
+      } catch (error) {
+        return link.getAttribute('href') || '';
+      }
+    }
+
+    var nextStates = {};
+    nextDocument.querySelectorAll('[data-site-nav] a[href]').forEach(function (link) {
+      nextStates[navigationKey(link)] = {
+        current: link.classList.contains('current'),
+        parentCurrent: link.classList.contains('parent-current')
+      };
+    });
+
+    document.querySelectorAll('[data-site-nav] a[href]').forEach(function (link) {
+      var state = nextStates[navigationKey(link)] || { current: false, parentCurrent: false };
+      link.classList.toggle('current', state.current);
+      link.classList.toggle('parent-current', state.parentCurrent);
+      if (state.current) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
+
+    closeDesktopSubmenus(null);
   }
 
   function announcePage() {
