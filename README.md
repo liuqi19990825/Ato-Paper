@@ -1,10 +1,11 @@
 # Ato Paper
 
-一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.5.5。
+一款为 Typecho 1.3.0 制作的纸张风个人博客主题，由 Ato 与 Codex 共同构建。当前版本为 0.6.0。
 
 ## 当前功能
 
 - 纸张质感首页与阅读型文章页
+- 自托管 Noto Serif SC 与 Noto Sans SC 可变字体，统一 Windows、macOS、Android 与 iOS 的主要排版
 - 深色模式与本地偏好记忆
 - 分类、标签、作者和搜索归档
 - Typecho 原生评论与嵌套回复
@@ -37,6 +38,14 @@
 1. 将完整的 `AtoPaper` 文件夹上传到 Typecho 的 `/usr/themes/` 目录。
 2. 在 Typecho 后台进入“控制台 → 外观”，启用 `Ato Paper`。
 3. 进入“设置外观”填写首页内容、社交链接和备案号。
+
+## 字体与加载策略
+
+主题将正文、标题与品牌字统一为自托管的 `Noto Serif SC`，导航、表单和辅助信息统一为 `Noto Sans SC`。字体文件随主题提供，不请求 Google Fonts 或其他字体 CDN。
+
+中文字体按 Google Fonts 的 `unicode-range` 拆分为小型 WOFF2 文件，浏览器只会下载当前页面实际出现字符对应的分片，而不是一次加载全部字体；拉丁基础分片会在页面头部预加载，以减少首屏字体切换。字体使用 `font-display: swap`，在弱网下会先显示系统回退字体，下载完成后切换为主题字体。
+
+字体文件名带有上游内容哈希，适合设置长期缓存。若需要单独配置 Nginx 缓存，可在现有静态资源规则中为 `.woff2` 使用长期 `expires`；不要为此额外创建重复的 `location /`。
 
 ## 启用主题 404 页面
 

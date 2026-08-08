@@ -16,7 +16,7 @@
   --code-blue: #55727a;
   --code-gold: #a36f38;
   --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, Georgia, serif;
-  --sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+  --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
   color-scheme: light;
 }
 
@@ -48,6 +48,7 @@ body {
     var(--paper);
   background-size: 6px 6px;
   font-family: var(--serif);
+  font-kerning: normal;
   text-rendering: optimizeLegibility;
   transition: color .25s ease, background-color .25s ease;
 }
