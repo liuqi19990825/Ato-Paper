@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 0.6.4
+ * @version 0.7.0
  * @link https://atowo.work/
  */
 
@@ -15,12 +15,27 @@ $heroImage = ato_option($this->options, 'heroImage');
 $heroSoft = ato_option($this->options, 'heroSoft', '如果其中某一篇刚好让你停下来读了一会儿，那就很好。');
 $heroSoftSource = ato_option($this->options, 'heroSoftSource', 'manual');
 $aboutPageUrl = ato_site_url($this->options, ato_option($this->options, 'aboutPageUrl', 'about-me.html'));
-$moments = ato_now_items(ato_option($this->options, 'nowItems'));
-$latestMoment = $moments[0] ?? [
+$legacyMoments = ato_now_items(ato_option($this->options, 'nowItems'));
+$latestMoment = ato_latest_murmur($this->options);
+if ($latestMoment === null) {
+    $latestMoment = $legacyMoments[0] ?? [
     'dateLabel' => date('m.d'),
     'title' => '博客正在慢慢长大',
     'body' => '最近在整理这个小世界，也给未来想写的东西留出一些位置。',
-];
+    ];
+}
+$murmurCategoryId = ato_murmur_category_id($this->options);
+$isFilteredHome = $this->is('index') && $murmurCategoryId > 0;
+$stream = $this;
+$streamPageSize = max(1, (int) $this->options->postsListSize);
+if ($isFilteredHome) {
+    $stream = ato_murmur_posts(
+        $murmurCategoryId,
+        'exclude',
+        $this->getCurrentPage(),
+        $streamPageSize
+    );
+}
 $entryIndex = 0;
 ?>
 
@@ -56,21 +71,21 @@ $entryIndex = 0;
                 <span>随缘更新，慢慢记录</span>
             </header>
 
-            <?php if ($this->have()): ?>
-                <?php while ($this->next()): $entryIndex++; $manualSnippet = trim((string) $this->fields->homeSnippet); ?>
+            <?php if ($stream->have()): ?>
+                <?php while ($stream->next()): $entryIndex++; $manualSnippet = trim((string) $stream->fields->homeSnippet); ?>
                     <article class="post-entry<?php echo $entryIndex === 1 ? ' post-entry-first' : ''; ?>" itemscope itemtype="https://schema.org/BlogPosting">
                         <div class="post-entry-meta">
-                            <time datetime="<?php $this->date('c'); ?>" itemprop="datePublished"><?php $this->date('Y 年 m 月 d 日'); ?></time>
+                            <time datetime="<?php $stream->date('c'); ?>" itemprop="datePublished"><?php $stream->date('Y 年 m 月 d 日'); ?></time>
                             <span>·</span>
-                            <span class="meta-category"><?php $this->category('、'); ?></span>
+                            <span class="meta-category"><?php $stream->category('、'); ?></span>
                         </div>
-                        <h2 itemprop="headline"><a href="<?php $this->permalink(); ?>" itemprop="url"><?php $this->title(); ?></a></h2>
-                        <div class="post-excerpt" itemprop="description"><?php $this->excerpt(120, '…'); ?></div>
+                        <h2 itemprop="headline"><a href="<?php $stream->permalink(); ?>" itemprop="url"><?php $stream->title(); ?></a></h2>
+                        <div class="post-excerpt" itemprop="description"><?php $stream->excerpt(120, '…'); ?></div>
 
                         <?php if ($entryIndex === 1): ?>
-                            <a href="<?php $this->permalink(); ?>" class="diary-slip" aria-label="阅读：<?php $this->title(); ?>">
+                            <a href="<?php $stream->permalink(); ?>" class="diary-slip" aria-label="阅读：<?php $stream->title(); ?>">
                                 <span>今天的片段</span>
-                                <blockquote><?php if ($manualSnippet !== ''): ?><?php ato_e($manualSnippet); ?><?php else: ?><?php $this->excerpt(62, '…'); ?><?php endif; ?></blockquote>
+                                <blockquote><?php if ($manualSnippet !== ''): ?><?php ato_e($manualSnippet); ?><?php else: ?><?php $stream->excerpt(62, '…'); ?><?php endif; ?></blockquote>
                                 <b>继续读下去 →</b>
                             </a>
                         <?php endif; ?>
@@ -80,15 +95,33 @@ $entryIndex = 0;
                 <article class="empty-paper"><h2>这里暂时还没有文章。</h2><p>等写下第一句话以后，再回来看看吧。</p></article>
             <?php endif; ?>
 
-            <nav class="page-nav" aria-label="文章分页"><?php $this->pageNav('← 新一点', '旧一点 →', 2, '...'); ?></nav>
+            <nav class="page-nav" aria-label="文章分页">
+                <?php if ($isFilteredHome): ?>
+                    <?php
+                    $homePageTemplate = \Typecho\Router::url(
+                        'index_page',
+                        ['page' => '{page}'],
+                        $this->options->index
+                    );
+                    ato_page_nav(
+                        $stream->getTotalCount(),
+                        $stream->getCurrentPageNumber(),
+                        $stream->getPageSizeNumber(),
+                        $homePageTemplate
+                    );
+                    ?>
+                <?php else: ?>
+                    <?php $this->pageNav('← 新一点', '旧一点 →', 2, '...'); ?>
+                <?php endif; ?>
+            </nav>
         </section>
 
         <aside class="blog-sidebar">
-            <a class="now-note now-note-link" href="<?php ato_e(ato_site_url($this->options, ato_option($this->options, 'nowPageUrl', 'now.html'))); ?>" aria-label="查看最近在做的时间轴">
+            <a class="now-note now-note-link" href="<?php ato_e(ato_site_url($this->options, ato_option($this->options, 'nowPageUrl', 'now.html'))); ?>" aria-label="查看碎碎念">
                 <span class="tape" aria-hidden="true"></span>
                 <small>最近在做</small>
                 <p><?php ato_e($latestMoment['body']); ?></p>
-                <span class="now-note-foot"><time>更新于 <?php ato_e($latestMoment['dateLabel']); ?></time><b>查看时间轴 →</b></span>
+                <span class="now-note-foot"><time>更新于 <?php ato_e($latestMoment['dateLabel']); ?></time><b>查看碎碎念 →</b></span>
             </a>
 
             <section class="side-section" id="categories">

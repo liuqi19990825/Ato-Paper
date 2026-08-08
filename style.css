@@ -345,7 +345,10 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .now-page-header { position: relative; max-width: 680px; margin-bottom: 76px; }
 .now-page-header::after { content: "✦"; position: absolute; right: 18px; bottom: -12px; color: var(--accent); font-size: 17px; transform: rotate(9deg); }
 .now-page-header h1 { margin: 0 0 22px; font-size: clamp(42px, 7vw, 62px); line-height: 1.2; font-weight: 500; letter-spacing: -.05em; }
-.now-page-header > p { max-width: 590px; margin: 0; color: var(--muted); font-size: 15px; line-height: 2; }
+.now-page-intro { max-width: 590px; color: var(--muted); font-size: 15px; line-height: 2; }
+.now-page-intro > :first-child { margin-top: 0; }
+.now-page-intro > :last-child { margin-bottom: 0; }
+.now-page-intro p { margin: 0 0 12px; }
 .now-status { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font: 500 9px/1 var(--sans); }
 .now-status i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent); animation: now-pulse 2.4s ease-in-out infinite; }
 .moment-timeline { position: relative; }
@@ -362,7 +365,26 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
 .moment-paper::before { content: ""; position: absolute; left: 34px; top: -8px; width: 53px; height: 15px; background: rgba(203, 177, 128, .32); transform: rotate(-2deg); }
 .moment-tag { color: var(--accent); font: 700 9px/1 var(--sans); letter-spacing: .12em; }
 .moment-paper h2 { margin: 12px 0; font-size: 20px; line-height: 1.55; font-weight: 600; }
+.moment-paper h2 a { background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-position: 0 100%; background-size: 0 1px; transition: color .2s ease, background-size .25s ease; }
+.moment-paper h2 a:hover { color: var(--accent); background-size: 100% 1px; }
 .moment-paper p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.95; }
+.moment-body { min-width: 0; color: var(--muted); font-size: 14px; line-height: 1.95; overflow-wrap: anywhere; }
+.moment-body > :first-child { margin-top: 0; }
+.moment-body > :last-child { margin-bottom: 0; }
+.moment-body p { margin: 0 0 13px; }
+.moment-body h2, .moment-body h3, .moment-body h4 { margin: 24px 0 11px; color: var(--ink); font-size: 17px; line-height: 1.6; }
+.moment-body ul, .moment-body ol { margin: 13px 0; padding-left: 1.45em; }
+.moment-body li + li { margin-top: 5px; }
+.moment-body blockquote { margin: 17px 0; padding-left: 14px; border-left: 2px solid var(--accent); }
+.moment-body img { display: block; max-width: 100%; height: auto; margin: 18px auto; border-radius: 2px; }
+.moment-body pre { max-width: 100%; margin: 18px 0; padding: 15px 17px; overflow: auto; border: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 72%, var(--paper-deep)); font: 12px/1.75 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.moment-body code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.moment-foot { display: flex; margin-top: 22px; padding-top: 15px; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px dashed var(--line); color: var(--muted); font: 550 10px/1.5 var(--sans); }
+.moment-foot a { transition: color .18s ease; }
+.moment-foot a:first-child { color: var(--accent); }
+.moment-foot a:hover { color: var(--accent); }
+.moment-timeline > .empty-paper { margin-left: 144px; }
+.murmur-page-nav { margin-left: 144px; }
 .timeline-ending { margin: 72px 0 0 144px; color: var(--muted); font-size: 13px; line-height: 1.8; }
 .timeline-ending span { margin-left: 9px; color: var(--accent); }
 @keyframes now-pulse { 0%, 100% { opacity: .72; transform: scale(.9); } 50% { opacity: 1; transform: scale(1.08); } }
@@ -492,6 +514,9 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
   .moment-date span { margin-left: 8px; }
   .moment-dot { left: 3px; top: 3px; }
   .moment-paper { padding: 24px 23px 25px; }
+  .moment-foot { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .moment-timeline > .empty-paper { margin-left: 31px; }
+  .murmur-page-nav { margin-left: 31px; }
   .timeline-ending { margin: 58px 0 0 31px; }
 }
 

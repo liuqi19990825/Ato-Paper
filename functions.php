@@ -4,13 +4,14 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 }
 
 require_once __DIR__ . '/inc/emotes.php';
+require_once __DIR__ . '/inc/murmurs.php';
 
 /**
  * 用于静态资源缓存刷新的主题版本号。
  */
 function ato_theme_version()
 {
-    return '0.6.4';
+    return '0.7.0';
 }
 
 /**
@@ -184,8 +185,8 @@ function themeConfig($form)
         'nowPageUrl',
         null,
         'now.html',
-        _t('近况页面地址'),
-        _t('创建“近况”独立页面并选择“近况时间轴”模板后，填写它的相对地址或完整 URL。')
+        _t('碎碎念页面地址'),
+        _t('创建“碎碎念”独立页面并选择“碎碎念”模板后，填写它的相对地址或完整 URL。')
     );
     $form->addInput($nowPageUrl);
 
@@ -259,6 +260,30 @@ function themeConfig($form)
     );
     $form->addInput($commentAvatarDefault);
 
+    $categoryOptions = ['0' => _t('未选择（继续使用下方旧版数据）')];
+    $categoryRows = \Widget\Metas\Category\Rows::allocWithAlias('ato-murmur-config');
+    while ($categoryRows->next()) {
+        $categoryOptions[(string) $categoryRows->mid] = $categoryRows->name;
+    }
+
+    $murmurCategory = new \Typecho\Widget\Helper\Form\Element\Select(
+        'murmurCategory',
+        $categoryOptions,
+        '0',
+        _t('碎碎念分类'),
+        _t('把日常短句作为普通文章发布到这个分类。首页文章流会排除该分类，“最近在做”和碎碎念独立页则从这里读取。')
+    );
+    $form->addInput($murmurCategory);
+
+    $murmurPageSize = new \Typecho\Widget\Helper\Form\Element\Text(
+        'murmurPageSize',
+        null,
+        '8',
+        _t('碎碎念每页条数'),
+        _t('建议填写 6–12，默认每页显示 8 条。')
+    );
+    $form->addInput($murmurPageSize);
+
     $defaultNow = "2026-08-05|博客|给这个小世界重新铺一层纸|整理歌单，补几篇拖了很久的文章，也在认真把博客装修得更舒服一点。\n"
         . "2026-07-29|正在听|最近总在循环一些有雨声的歌|安静的鼓点和稍远一点的人声，很适合七月底闷热的夜晚。\n"
         . "2026-07-21|游戏|慢慢体验姬子·启行|没有急着追进度，一边体验剧情和机甲演出，一边记下机制与手感。\n"
@@ -267,8 +292,8 @@ function themeConfig($form)
         'nowItems',
         null,
         $defaultNow,
-        _t('近况时间轴'),
-        _t('每行一条，格式为：日期|标签|标题|正文。最新内容放在最上面。')
+        _t('旧版碎碎念数据（兼容）'),
+        _t('仅在没有选择“碎碎念分类”时使用。每行一条：日期|标签|标题|正文，最新内容放在最上面。')
     );
     $form->addInput($nowItems);
 
@@ -465,7 +490,7 @@ function ato_site_url($options, $path)
 }
 
 /**
- * 解析“日期|标签|标题|正文”格式的近况数据。
+ * 解析“日期|标签|标题|正文”格式的旧版碎碎念数据。
  */
 function ato_now_items($raw)
 {
@@ -495,6 +520,123 @@ function ato_now_items($raw)
     }
 
     return $items;
+}
+
+/**
+ * 返回后台指定的碎碎念分类 ID。
+ */
+function ato_murmur_category_id($options)
+{
+    return max(0, (int) ato_option($options, 'murmurCategory', '0'));
+}
+
+/**
+ * 返回经过限制的碎碎念分页大小。
+ */
+function ato_murmur_page_size($options)
+{
+    return max(1, min(50, (int) ato_option($options, 'murmurPageSize', '8')));
+}
+
+/**
+ * 创建碎碎念文章查询。mode 为 include 时只读取该分类，exclude 时从结果中排除。
+ */
+function ato_murmur_posts($categoryId, $mode = 'include', $currentPage = 1, $pageSize = 8)
+{
+    $categoryId = max(0, (int) $categoryId);
+    $mode = $mode === 'exclude' ? 'exclude' : 'include';
+    $currentPage = max(1, (int) $currentPage);
+    $pageSize = max(1, min(50, (int) $pageSize));
+    $alias = implode('-', ['ato-murmurs', $mode, $categoryId, $currentPage, $pageSize]);
+
+    return AtoPaperMurmurPosts::allocWithAlias($alias, [
+        'categoryId' => $categoryId,
+        'mode' => $mode,
+        'currentPage' => $currentPage,
+        'pageSize' => $pageSize,
+    ]);
+}
+
+/**
+ * 将正文整理为适合首页便签显示的短句。
+ */
+function ato_murmur_excerpt($html, $length = 92)
+{
+    $text = html_entity_decode(strip_tags((string) $html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = preg_replace('/\s+/u', ' ', $text);
+    $text = trim((string) $text);
+
+    return $text === '' ? '' : \Typecho\Common::subStr($text, 0, max(1, (int) $length), '…');
+}
+
+/**
+ * 读取最近一条碎碎念，供首页“最近在做”便签使用。
+ */
+function ato_latest_murmur($options)
+{
+    $categoryId = ato_murmur_category_id($options);
+    if ($categoryId < 1) {
+        return null;
+    }
+
+    $posts = AtoPaperMurmurPosts::allocWithAlias('ato-murmur-latest-' . $categoryId, [
+        'categoryId' => $categoryId,
+        'mode' => 'include',
+        'currentPage' => 1,
+        'pageSize' => 1,
+    ]);
+    if (!$posts->have()) {
+        return null;
+    }
+
+    $posts->next();
+    $body = ato_murmur_excerpt($posts->content, 92);
+    if ($body === '') {
+        $body = trim((string) $posts->title);
+    }
+
+    return [
+        'date' => $posts->date->format('Y-m-d'),
+        'dateLabel' => $posts->date->format('m.d'),
+        'year' => $posts->date->format('Y'),
+        'title' => (string) $posts->title,
+        'body' => $body,
+        'permalink' => (string) $posts->permalink,
+    ];
+}
+
+/**
+ * 使用 Typecho 自带分页器输出与主题一致的页码。
+ */
+function ato_page_nav($total, $currentPage, $pageSize, $pageTemplate, $prev = '← 新一点', $next = '旧一点 →')
+{
+    $total = max(0, (int) $total);
+    $currentPage = max(1, (int) $currentPage);
+    $pageSize = max(1, (int) $pageSize);
+    $totalPage = (int) ceil($total / $pageSize);
+    if ($totalPage < 2 || $currentPage > $totalPage) {
+        return;
+    }
+
+    $nav = new \Typecho\Widget\Helper\PageNavigator\Box(
+        $total,
+        $currentPage,
+        $pageSize,
+        (string) $pageTemplate
+    );
+    echo '<ol class="page-navigator">';
+    $nav->render($prev, $next, 2, '...');
+    echo '</ol>';
+}
+
+/**
+ * 为独立页生成不依赖伪静态规则的查询参数分页模板。
+ */
+function ato_query_page_template($url, $parameter = 'murmur_page')
+{
+    $url = (string) $url;
+    $separator = strpos($url, '?') === false ? '?' : '&';
+    return $url . $separator . rawurlencode((string) $parameter) . '={page}';
 }
 
 /**
