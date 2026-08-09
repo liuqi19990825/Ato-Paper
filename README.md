@@ -1,27 +1,42 @@
-# Ato Paper
+中文 | [English](./README_EN.md)
 
-> 一款侧重日常阅读的 Typecho 纸张风主题。<br>
-> 写生活、写碎碎念，也写那些偶尔想认真读完的长文章。
+<div align="center">
+  <img src="./assets/icons/pwa-512.png" alt="Ato Paper 樱花 Logo" width="120">
+
+  <h1>Typecho Theme — Ato Paper</h1>
+
+  <p>一款侧重日常阅读的 Typecho 纸张风主题。</p>
+  <p>写生活、写碎碎念，也写那些偶尔想认真读完的长文章。</p>
+
+  <p>
+    <a href="https://github.com/liuqi19990825/Ato-Paper/releases/latest">
+      <img src="https://img.shields.io/github/v/release/liuqi19990825/Ato-Paper?color=d27364&label=Release&logo=github" alt="最新版本">
+    </a>
+    <img src="https://img.shields.io/badge/Typecho-1.3.0-d27364" alt="Typecho 1.3.0">
+    <img src="https://img.shields.io/badge/PHP-7.4%2B-777BB4?logo=php&logoColor=white" alt="PHP 7.4+">
+    <a href="./LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-4f4b47" alt="MIT License">
+    </a>
+  </p>
+
+  <p>
+    <a href="https://atowo.work/">在线预览</a>
+    ·
+    <a href="https://github.com/liuqi19990825/Ato-Paper/releases/latest">下载主题</a>
+    ·
+    <a href="#安装与升级">安装说明</a>
+  </p>
+
+  <a href="https://atowo.work/">
+    <img src="./assets/screenshots/device-showcase.webp" alt="Ato Paper 桌面、笔记本、平板与手机多设备预览" width="1080">
+  </a>
+
+  <sub>浅色与深色模式 · 桌面、平板和手机响应式布局</sub>
+</div>
+
+---
 
 由 Ato 与 Codex 通过 **vibe coding** 共同构建。当前正式版本：**1.0.3**。
-
-<p align="center">
-  <a href="https://atowo.work/">
-    <img src="assets/screenshots/homepage-desktop.png" alt="Ato Paper PC 端首页预览" width="920">
-  </a>
-</p>
-
-<p align="center">
-  <sub>PC 端首页 · <a href="https://atowo.work/">在线预览</a></sub>
-</p>
-
-<p align="center">
-  <img src="assets/screenshots/homepage-mobile.png" alt="Ato Paper 移动端首页预览" width="320">
-</p>
-
-<p align="center">
-  <sub>移动端首页 · 响应式菜单与阅读布局</sub>
-</p>
 
 ## 目录
 
