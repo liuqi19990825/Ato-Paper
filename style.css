@@ -534,7 +534,7 @@ body.ato-pjax-leaving [data-ato-pjax-main] { opacity: .45; transform: translateY
   .hello-postcard { align-self: center; width: min(280px, 85%); transform: rotate(1.5deg); }
   .hello-postcard img { height: 300px; }
   .hello::after { display: none; }
-  .home-layout { display: flex; align-items: stretch; flex-direction: column; }
+  .home-layout { display: flex; align-items: stretch; flex-direction: column; gap: 0; }
   .post-stream { order: 0; }
   .blog-sidebar { display: contents; }
   .now-note { order: -1; width: min(300px, 90%); margin: 0 auto 68px; }
