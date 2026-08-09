@@ -36,7 +36,7 @@
 
 ---
 
-Ato Paper is built by Ato and Codex through **vibe coding**. Current stable version: **1.0.4**.
+Ato Paper is built by Ato and Codex through **vibe coding**. Current stable version: **1.0.5**.
 
 ## Contents
 
