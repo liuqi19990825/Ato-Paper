@@ -4,7 +4,7 @@
  *
  * @package Ato Paper
  * @author Ato & Codex
- * @version 1.0.7
+ * @version 1.0.8
  * @link https://atowo.work/
  */
 
@@ -109,25 +109,32 @@ $entryIndex = 0;
                 <article class="empty-paper"><h2>这里暂时还没有文章。</h2><p>等写下第一句话以后，再回来看看吧。</p></article>
             <?php endif; ?>
 
-            <nav class="page-nav" aria-label="文章分页">
-                <?php if ($isFilteredHome): ?>
-                    <?php
-                    $homePageTemplate = \Typecho\Router::url(
-                        'index_page',
-                        ['page' => '{page}'],
-                        $this->options->index
-                    );
-                    ato_page_nav(
-                        $stream->getTotalCount(),
-                        $stream->getCurrentPageNumber(),
-                        $stream->getPageSizeNumber(),
-                        $homePageTemplate
-                    );
-                    ?>
-                <?php else: ?>
-                    <?php $this->pageNav('← 新一点', '旧一点 →', 2, '...'); ?>
-                <?php endif; ?>
-            </nav>
+            <?php
+            $hasHomePagination = $isFilteredHome
+                ? $stream->getTotalCount() > $stream->getPageSizeNumber()
+                : $this->getTotalPage() > 1;
+            ?>
+            <?php if ($hasHomePagination): ?>
+                <nav class="page-nav" aria-label="文章分页">
+                    <?php if ($isFilteredHome): ?>
+                        <?php
+                        $homePageTemplate = \Typecho\Router::url(
+                            'index_page',
+                            ['page' => '{page}'],
+                            $this->options->index
+                        );
+                        ato_page_nav(
+                            $stream->getTotalCount(),
+                            $stream->getCurrentPageNumber(),
+                            $stream->getPageSizeNumber(),
+                            $homePageTemplate
+                        );
+                        ?>
+                    <?php else: ?>
+                        <?php $this->pageNav('← 新一点', '旧一点 →', 2, '...'); ?>
+                    <?php endif; ?>
+                </nav>
+            <?php endif; ?>
         </section>
 
         <aside class="blog-sidebar">
