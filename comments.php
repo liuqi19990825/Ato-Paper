@@ -48,7 +48,7 @@ $commentContactMode = ato_option($this->options, 'commentContactMode', 'qq');
                 <div class="comment-actions">
                     <div class="comment-emote-tools" data-comment-emotes>
                         <button class="comment-emote-toggle" type="button" data-emote-toggle aria-expanded="false" aria-controls="comment-emote-panel">
-                            <span aria-hidden="true">☺</span><b>表情</b><i aria-hidden="true">＋</i>
+                            <span class="comment-emote-face" aria-hidden="true"></span><b>表情</b><i aria-hidden="true">＋</i>
                         </button>
                         <div class="comment-emote-popover" id="comment-emote-panel" data-emote-popover hidden>
                         <div class="comment-emote-tabs" role="tablist" aria-label="选择表情分类">
