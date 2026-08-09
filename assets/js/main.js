@@ -277,7 +277,7 @@
     var rememberedQQ = rememberedMail.match(/^([1-9][0-9]{4,11})@qq\.com$/i);
     var field = contactInput.closest('label');
     var hint = field ? field.querySelector('[data-comment-contact-hint]') : null;
-    var defaultHint = 'QQ 用于头像与对应 QQ 邮箱通知；Email 用于头像与回复通知。';
+    var defaultHint = '自动识别 QQ / Email，仅用于头像与回复通知。';
     if (rememberedMail) contactInput.value = rememberedQQ ? rememberedQQ[1] : rememberedMail;
 
     function setContactKind(kind) {
@@ -286,8 +286,8 @@
         field.classList.toggle('is-email', kind === 'email');
       }
       if (!hint) return;
-      if (kind === 'qq') hint.textContent = '已识别为 QQ，回复将通知对应的 QQ 邮箱。';
-      else if (kind === 'email') hint.textContent = '已识别为 Email，回复将通知这个邮箱。';
+      if (kind === 'qq') hint.textContent = '已识别为 QQ，将通知对应的 QQ 邮箱。';
+      else if (kind === 'email') hint.textContent = '已识别为 Email，将用于回复通知。';
       else hint.textContent = defaultHint;
     }
 

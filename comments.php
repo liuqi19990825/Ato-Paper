@@ -30,30 +30,27 @@ $commentContactMode = ato_option($this->options, 'commentContactMode', 'qq');
                     <p class="logged-in-note">以 <a href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a> 的身份留言 · <a href="<?php $this->options->logoutUrl(); ?>">退出</a></p>
                 <?php else: ?>
                     <div class="comment-fields">
-                        <label>称呼<input name="author" type="text" value="<?php $this->remember('author'); ?>" autocomplete="name" required></label>
+                        <label><span>称呼</span><input name="author" type="text" value="<?php $this->remember('author'); ?>" autocomplete="name" required></label>
                         <?php if ($commentContactMode === 'qq'): ?>
-                            <label class="comment-contact-field">联系方式
+                            <label class="comment-contact-field"><span>联系方式</span>
                                 <input name="mail" type="text" value="<?php $this->remember('mail'); ?>" maxlength="150" autocomplete="email" placeholder="QQ 号或 Email" data-comment-contact<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>>
-                                <small data-comment-contact-hint>QQ 用于头像与对应 QQ 邮箱通知；Email 用于头像与回复通知。</small>
+                                <small data-comment-contact-hint>自动识别 QQ / Email，仅用于头像与回复通知。</small>
                             </label>
                         <?php else: ?>
-                            <label>Email<input name="mail" type="email" value="<?php $this->remember('mail'); ?>" autocomplete="email"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>></label>
+                            <label><span>Email</span><input name="mail" type="email" value="<?php $this->remember('mail'); ?>" autocomplete="email"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>><small>仅用于头像与回复通知，不会公开。</small></label>
                         <?php endif; ?>
-                        <label>网站<input name="url" type="url" value="<?php $this->remember('url'); ?>" autocomplete="url" placeholder="https://"></label>
+                        <label><span>网站</span><input name="url" type="url" value="<?php $this->remember('url'); ?>" autocomplete="url" placeholder="https://"></label>
                     </div>
-                    <p class="comment-mail-notice">
-                        <span aria-hidden="true">✉</span>
-                        <span><?php if ($commentContactMode === 'qq'): ?>回复通知会发送到你预留的邮箱；填写 QQ 号时，将发送到对应的 QQ 邮箱。<?php else: ?>回复通知会发送到你预留的邮箱，邮箱地址不会公开显示。<?php endif; ?></span>
-                    </p>
                 <?php endif; ?>
 
-                <label class="comment-textarea-label" for="textarea">留言内容</label>
+                <label class="comment-textarea-label sr-only" for="textarea">留言内容</label>
                 <textarea id="textarea" name="text" rows="6" placeholder="写下你的想法……" required><?php $this->remember('text'); ?></textarea>
-                <div class="comment-emote-tools" data-comment-emotes>
-                    <button class="comment-emote-toggle" type="button" data-emote-toggle aria-expanded="false" aria-controls="comment-emote-panel">
-                        <span aria-hidden="true">☺</span><b>表情</b><i aria-hidden="true">＋</i>
-                    </button>
-                    <div class="comment-emote-popover" id="comment-emote-panel" data-emote-popover hidden>
+                <div class="comment-actions">
+                    <div class="comment-emote-tools" data-comment-emotes>
+                        <button class="comment-emote-toggle" type="button" data-emote-toggle aria-expanded="false" aria-controls="comment-emote-panel">
+                            <span aria-hidden="true">☺</span><b>表情</b><i aria-hidden="true">＋</i>
+                        </button>
+                        <div class="comment-emote-popover" id="comment-emote-panel" data-emote-popover hidden>
                         <div class="comment-emote-tabs" role="tablist" aria-label="选择表情分类">
                             <button type="button" id="emote-tab-kaomoji" role="tab" aria-selected="true" aria-controls="emote-panel-kaomoji" data-emote-tab="kaomoji">颜文字</button>
                             <button type="button" id="emote-tab-tieba" role="tab" aria-selected="false" aria-controls="emote-panel-tieba" data-emote-tab="tieba" tabindex="-1">贴吧泡泡</button>
@@ -84,10 +81,11 @@ $commentContactMode = ato_option($this->options, 'commentContactMode', 'qq');
                                 </button>
                             <?php endforeach; ?>
                         </div>
-                        <small>点击即可插入到光标位置</small>
+                            <small>点击即可插入到光标位置</small>
+                        </div>
                     </div>
+                    <button class="comment-submit" type="submit">留下这句话</button>
                 </div>
-                <button class="comment-submit" type="submit">把这句话留下来</button>
             </form>
         </div>
     <?php else: ?>
